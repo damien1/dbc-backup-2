@@ -106,7 +106,8 @@
         <mkdir dir="${dist.dir}" />
     </target>
 
-    <target name="make" depends="makedir">
+
+    <target name="make" depends="makedir, readme" description="Performs the build">
         <copy todir="${build.dir}/${plugin.name}">
             <fileset dir="."
                      includes="**/*.php"
@@ -121,7 +122,7 @@
 
     </target>
 
-    <target name="readme">
+    <target name="readme" description="Makes the plugin readme.txt file">
         <echo message="Generating readme file ..." level="info"/>
         <copy todir="${build.dir}/${plugin.name}">
             <fileset dir="."/>
@@ -174,14 +175,15 @@
 	<!--             ******** SVN STUFF **********                       -->
 	<!-- *************************************************************** -->
 
-	<property name="svn.base.url" value="${svn.repository.url}/${svn.project.base.path}"/>
+
 
 	<target name="check-abc">
-		<available file="build.properties" property="abc.present"/>
+		<available file="deploy.properties" property="abc.present"/>
 	</target>
 
 	<target name="do-if-abc" depends="check-abc" if="abc.present">
-		<property file="build.properties"></property>
+		<property file="deploy.properties"></property>
+		<property name="svn.base.url" value="${svn.repository.url}/${svn.project.base.path}"/>
 	</target>
 
 
@@ -196,37 +198,44 @@
 	<!--                                                                     -->
 	<!-- ******************************************************************* -->
 
-		<target name="svnCommit" depends="do-if-abc">
-
+	<target name="svnCommit" depends="do-if-abc, make" description="Perform SVN Commit">
+		<property name="svn.tag.message" value="Commit for Project ${ant.project.name} with tag name ${tag.name} to trunk "/>
+		<property name="dest.url"  value="${svn.base.url}/trunk/"/>
+		<record name="${build.dir}/logfile.txt" action="start" append="true" />
+		<echo message="${svn.tag.message}"/>
+		<echo message="${src.url}"/>
+		<echo message="${dest.url}"/>
+		<fail unless="svn.username"/>
 		<java classname="org.tmatesoft.svn.cli.SVN"
-					dir="${build.dir}" fork="true">
-							<arg value="commit"/>
-							<arg value="--username"/>
-							<arg value="${svn.username}"/>
-							<arg value="-m"/>
-							<arg value='"Testing"'/>
-							<arg value="${svn.base.url}"/>
+					dir="${build.dir}/${plugin.name}" fork="true">
+			<arg value="commit"/>
+			<arg value="--username"/>
+			<arg value="${svn.username}"/>
+			<arg value="-m"/>
+			<arg value="${svn.tag.message}"/>
+			<arg value="${svn.base.url}"/>
 			<classpath>
 				<fileset dir="${ant.home}/lib">
 					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
 		</java>
+		<record name="${build.dir}/logfile.txt" action="stop"/>
 	</target>
 
 	<!-- ****************************************************************** -->
 	<!-- svntag: performs tagging using properties from                              -->
 	<!--         build.properties and uses SVNANT tasks                              -->
 	<!-- ******************************************************************* -->
-	<target name="svntag" description="tags individual project using svnant task" depends="do-if-abc">
+	<target name="svntag" description="tags individual project using svnant task" depends="do-if-abc,makedir">
 		<property name="svn.tag.message" value="Tagging Project ${ant.project.name} with tag name ${tag.name} from trunk "/>
 		<property name="src.url"  value="${svn.base.url}/trunk/"/>
 		<property name="dest.url" value="${svn.base.url}/tags/${tag.name}"/>
-		<record name="logfile.txt" action="start" append="true" />
+		<record name="${build.dir}/logfile.txt" action="start" append="true" />
 		<echo message="${svn.tag.message}"/>
 		<echo message="${src.url}"/>
 		<echo message="${dest.url}"/>
-
+		<fail unless="svn.username"/>
 		<java classname="org.tmatesoft.svn.cli.SVN">
 			<arg value="copy"/>
 			<arg value="${src.url}"/>
@@ -243,7 +252,7 @@
 				</fileset>
 			</classpath>
 		</java>
-		<record name="logfile.txt" action="stop"/>
+		<record name="${build.dir}/logfile.txt" action="stop"/>
 	</target>
 
 
