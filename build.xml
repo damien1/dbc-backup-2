@@ -21,6 +21,10 @@
     <!-- MAKE IT THE SAME BELOW -->
     <!-- MAKE IT THE SAME BELOW -->
 
+	<!-- *************************************************************** -->
+	<!--             ********    MAC    **********                   -->
+	<!-- *************************************************************** -->
+
     <!-- DANGER DEV Deletes the existing directory-->
 
     <target name="mac.plugin.clean">
@@ -34,6 +38,11 @@
         <delete dir="${mac.plugin.dir}" />
     </target>
 
+
+
+	<!-- *************************************************************** -->
+	<!--             ********    Windows    **********                   -->
+	<!-- *************************************************************** -->
 
 
     <!-- WINDOWS Deletes the existing directory-->
@@ -104,6 +113,7 @@
         <mkdir dir="${build.dir}" />
         <mkdir dir="${build.dir}/${plugin.name}" />
         <mkdir dir="${dist.dir}" />
+				<mkdir dir="${src.dir}" />
     </target>
 
 
@@ -111,7 +121,7 @@
         <copy todir="${build.dir}/${plugin.name}">
             <fileset dir="."
                      includes="**/*.php"
-                     excludes="**/templates/,**/testing/,**/tests/"
+                     excludes="**/templates/,**/testing/,**/tests/,**/src"
                     />
         </copy>
 
@@ -135,7 +145,11 @@
 
     </target>
 
-
+	<target name="svnSrc" depends="make" description="SVN ANT is worryingly simple">
+		<copy todir="${src.dir}/trunk">
+			<fileset dir="${build.dir}/${plugin.name}"/>
+		</copy>
+	</target>
 
 
 
@@ -187,6 +201,29 @@
 	</target>
 
 
+	<!-- ****************************************************************** -->
+	<!-- svnCheckout:                                                          -->
+	<!--                                                                     -->
+	<!-- ******************************************************************* -->
+	<target name="svnCheckout" depends="do-if-abc, makedir">
+		<property name="source-root" value="/src"/>
+		<property name="src.url"  value="${svn.base.url}/trunk/"/>
+		<fail unless="svn.username"/>
+		<java classname="org.tmatesoft.svn.cli.SVN"
+					dir="${src.dir}" fork="true">
+			<arg value="co"/>
+			<arg value="--username"/>
+			<arg value="${svn.username}"/>
+			<arg value="--password"/>
+			<arg value="${svn.password}"/>
+			<arg value="${src.url}"/>
+			<classpath>
+				<fileset dir="${ant.home}/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+		</java>
+	</target>
 
 
 
@@ -207,13 +244,12 @@
 		<echo message="${dest.url}"/>
 		<fail unless="svn.username"/>
 		<java classname="org.tmatesoft.svn.cli.SVN"
-					dir="${build.dir}/${plugin.name}" fork="true">
+					dir="${src.dir}/trunk" fork="true">
 			<arg value="commit"/>
 			<arg value="--username"/>
 			<arg value="${svn.username}"/>
 			<arg value="-m"/>
 			<arg value="${svn.tag.message}"/>
-			<arg value="${svn.base.url}"/>
 			<classpath>
 				<fileset dir="${ant.home}/lib">
 					<include name="**/*.jar"/>
