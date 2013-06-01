@@ -95,6 +95,7 @@
 			<echo message="delete the build and dist directories ..." level="info"/>
         <delete dir="${build.dir}" />
         <delete dir="${dist.dir}" />
+				<delete dir="${src.dir}" />
     </target>
 
 
