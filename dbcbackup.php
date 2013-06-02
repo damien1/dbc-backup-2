@@ -3,26 +3,82 @@
 Plugin Name: DBC Backup 2
 Plugin URI: http://wordpress.damien.co/plugins?utm_source=WordPress&utm_medium=dbc-backup&utm_campaign=WordPress-Plugin&utm_keyword=source
 Description: Safe & easy backup for your WordPress database. Just schedule and forget.
-Version: 2.2
+Version: 2.2.1
 Author: Damien Saunders
 Author URI: http://damien.co/?utm_source=WordPress&utm_medium=dbc-backup&utm_campaign=WordPress-Plugin&utm_keyword=source
 License: GPLv2 or later
 */
 
+/**
+ * You shouldn't be here.
+ */
 if ( ! defined( 'ABSPATH' ) ) exit;
+
+/**
+ * Globals
+ */
+define ("DBCBACKUP2_VERSION", "2.2");
+define ("PLUGIN_NAME", "dbc-backup-2");
+$plugin = plugin_basename(__FILE__);
+global $damien_dbc_option;
+global $plugin;
+
+
+/**
+ * @return mixed
+ */
+function dbc_get_global_options(){
+	$damien_dbc_option  = get_option('dbcbackup_options');
+	return $dbc_option;
+}
+
+
+
+
+
+
 /*
  * Save User Options to WPDB
  */	
-add_action('activate_dbcbackup/dbcbackup.php', 'dbcbackup_install');
-function dbcbackup_install() 
+//add_action('activate_dbcbackup/dbcbackup.php', 'dbcbackup_install');
+/**
+ *
+ */
+function dbcbackup_install()
 {
 	$options = array('export_dir' => '', 'compression' => 'none', 'gzip_lvl' => 0, 'period' => 86400,  'schedule' => time(), 'active' => 0, 'rotate' => -1);
 	add_option('dbcbackup_options', $options, '', 'no');
 }
 
-/*
- * Uninstall function
- */	
+/**
+ * Add the default settings to the database
+ */
+add_action('admin_init', 'damien_dbc_set_default_options');
+
+/**
+ *
+ */
+function damien_dbc_set_default_options() {
+	if (get_option('dbcbackup_options') === false){
+		$new_options['compression'] = "none";
+		$new_options['gzip_lvl'] = 0;
+		$new_options['period'] = 86400;
+		$new_options['schedule'] = time();
+		$new_options['active'] = 0;
+		$new_options['rotate'] =-1;
+		$new_options['version'] = DBCBACKUP2_VERSION;
+		$new_options['export_dir'] = "../wp-content/backup";
+		add_option('dbcbackup_options', $new_options);
+	}
+
+}
+
+
+
+
+/**
+ *  Uninstall function
+ */
 function dbcbackup_uninstall()
 {
 	wp_clear_scheduled_hook('dbc_backup');	
@@ -31,7 +87,13 @@ function dbcbackup_uninstall()
 register_deactivation_hook(__FILE__, 'dbcbackup_uninstall');
 
 add_action('dbc_backup', 'dbcbackup_run');
-function dbcbackup_run($mode = 'auto')
+
+
+/**
+ * @param string $mode
+ *
+ * @return array|bool
+ */function dbcbackup_run($mode = 'auto')
 {
 	if(defined('DBC_BACKUP_RETURN')) return;
 	$cfg = get_option('dbcbackup_options'); 
@@ -79,7 +141,9 @@ function dbcbackup_run($mode = 'auto')
 /*
  * i18n -- I need to local at the POT stuff for v2.2
  */
-function dbcbackup_locale()
+/**
+ *
+ */function dbcbackup_locale()
 {
 	load_plugin_textdomain('dbcbackup', 'wp-content/plugins/dbc-backup-2');
 }
@@ -88,7 +152,9 @@ function dbcbackup_locale()
  * 2.1 Add Menu - moved to Tools
  */
 add_action('admin_menu', 'dbcbackup_menu');
-function dbcbackup_menu() 
+/**
+ *
+ */function dbcbackup_menu()
 {
 	if(function_exists('add_management_page')) 
 	{
@@ -100,7 +166,9 @@ function dbcbackup_menu()
  * Add WP-Cron Job
  */
 add_filter('cron_schedules', 'dbcbackup_interval');
-function dbcbackup_interval() {
+/**
+ * @return array
+ */function dbcbackup_interval() {
 	$cfg = get_option('dbcbackup_options');
 	$cfg['period'] = ($cfg['period'] == 0) ? 86400 : $cfg['period'];
 	return array('dbc_backup' => array('interval' => $cfg['period'], 'display' => __('DBC Backup Interval', 'dbc_backup')));
@@ -109,7 +177,10 @@ function dbcbackup_interval() {
 /*
  * 2.1 Add settings link on Installed Plugin page
  */
-function dbc_backup_settings_link($links) { 
+/**
+ * @param $links
+ * @return mixed
+ */function dbc_backup_settings_link($links) {
   $settings_link = '<a href="tools.php?page=dbc-backup-2/dbcbackup-options.php">Settings</a>'; 
   array_unshift($links, $settings_link); 
   return $links; 
@@ -122,7 +193,9 @@ add_filter("plugin_action_links_$plugin", 'dbc_backup_settings_link' );
 /*
  * RSS feed
  */
-function dbc_backup_rss_display()
+/**
+ *
+ */function dbc_backup_rss_display()
 {
 $dbc_feed = 'http://damien.co/feed';
 
