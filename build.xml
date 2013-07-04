@@ -146,7 +146,29 @@
 
 	</target>
 
-
+	<target name="dev.json">
+		<echo file="dev-${plugin.name}.json" append="false">
+			{
+			"name" : "${plugin.name}",
+			"slug" : "${plugin.name}",
+			"homepage" : "http://wordpress.damien.co/${plugin.name}/",
+			"download_url" : "http://whitetshirtdigital.co.uk/plugins/${plugin.name}/${plugin.name}.zip",
+			"version" : "${plugin.build}",
+			"requires" : "3.3",
+			"tested" : "3.5.1",
+			"last_updated" : "2013-02-24 16:00:00",
+			"upgrade_notice" : "${plugin.changelog.version}",
+			"author" : "Damien Saunders",
+			"author_homepage" : "http://damien.co/",
+			"sections" : {
+			"description" : "${plugin.short}",
+			"installation_notes" : "Click install to download and automatically update to the new version..",
+			"changelog" : "This section list's what's changed. \n 1.7 - New Shortcode functions \n -Added pagination"
+			},
+			"downloaded" : 100
+			}
+		</echo>
+	</target>
 
 
 
@@ -200,6 +222,10 @@
 
 
 
+	<!-- *************************************************************** -->
+	<!--   JENKINS JENKINS JENKINS                                       -->
+	<!-- *************************************************************** -->
+
 	<target name="jenkins-build">
 		<!-- Clean -->
 		<antcall target="win.clean"></antcall>
@@ -209,41 +235,55 @@
 		<antcall target="dev.json"></antcall>
 	</target>
 
-	<target name="dev.json">
-		<echo file="dev-${plugin.name}.json" append="false">
-			{
-			"name" : "${plugin.name}",
-			"slug" : "${plugin.name}",
-			"homepage" : "http://wordpress.damien.co/${plugin.name}/",
-			"download_url" : "http://whitetshirtdigital.co.uk/plugins/${plugin.name}/${plugin.name}.zip",
-			"version" : "${plugin.build}",
-			"requires" : "3.3",
-			"tested" : "3.5.1",
-			"last_updated" : "2013-02-24 16:00:00",
-			"upgrade_notice" : "${plugin.changelog.version}",
-			"author" : "Damien Saunders",
-			"author_homepage" : "http://damien.co/",
-			"sections" : {
-			"description" : "${plugin.short}",
-			"installation_notes" : "Click install to download and automatically update to the new version..",
-			"changelog" : "This section list's what's changed. \n 1.7 - New Shortcode functions \n -Added pagination"
-			},
-			"downloaded" : 100
-			}
-		</echo>
-	</target>
+
 
 
 	<!-- *************************************************************** -->
-	<!--   You need WP CLI for this                                      -->
+	<!--             ******** WP-CLI **********                       -->
 	<!-- *************************************************************** -->
-	<target name="wp.status">
-		<echo message="Checking WP Status..." />
+
+	<target name="wp.status" description="WP-CLI check plugin state">
+		<echo message="Checking ${plugin.name} Status..." />
 
 		<exec executable="wp" dir=".">
 			<arg line="plugin status ${plugin.name}" />
 		</exec>
 	</target>
+
+	<target name="wp.install" description="WP-CLI install plugin">
+		<echo message="Installing ${plugin.name}..." />
+
+		<exec executable="wp" dir=".">
+			<arg line="plugin install ${dist.dir}/${plugin.name}.zip" />
+		</exec>
+	</target>
+
+	<target name="wp.activate" depends="wp.install" description="WP-CLI activate plugin">
+		<echo message="Activating ${plugin.name}..." />
+
+		<exec executable="wp" dir=".">
+			<arg line="plugin activate ${plugin.name}" />
+		</exec>
+	</target>
+
+	<target name="wp.deactivate" description="WP-CLI deactivate plugin">
+		<echo message="Deactivating ${plugin.name}..." />
+
+		<exec executable="wp" dir=".">
+			<arg line="plugin deactivate ${plugin.name}.zip" />
+		</exec>
+	</target>
+
+	<target name="wp.delete" description="WP-CLI deactivate plugin">
+		<echo message="Deleting ${plugin.name}..." />
+
+		<exec executable="wp" dir=".">
+			<arg line="plugin delete ${plugin.name}.zip" />
+		</exec>
+	</target>
+
+
+
 
 	<!-- *************************************************************** -->
 	<!--             ******** SVN STUFF **********                       -->
