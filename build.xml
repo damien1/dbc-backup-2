@@ -1,61 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="dbc-backup-2" basedir=".">
+<project name="***" basedir=".">
 
-    <!-- Include config file containing  -->
-    <loadproperties srcFile="build.properties" />
-    <loadproperties srcFile="dev.properties" />
-    <loadproperties srcFile="single.properties" />
-    <loadproperties srcFile="win.properties" />
+	<!-- Include config file containing  -->
+	<loadproperties srcFile="build.properties" />
+	<loadproperties srcFile="dev.properties" />
+	<loadproperties srcFile="single.properties" />
+	<loadproperties srcFile="win.properties" />
+	<loadproperties srcFile="deploy.properties" />
 
-    <!-- Sets variables which can later be used. -->
-    <!-- The value of a property is accessed via ${} -->
-    <property name="src.dir" location="src" />
-    <property name="build.dir" location="build" />
-    <property name="dist.dir" location="dist" />
-
-
-    <fail unless="plugin.name"/>
+	<!-- Sets variables which can later be used. -->
+	<!-- The value of a property is accessed via ${} -->
+	<property name="src.dir" location="src" />
+	<property name="build.dir" location="build" />
+	<property name="dist.dir" location="dist" />
 
 
-
-    <!-- MAKE IT THE SAME BELOW -->
-    <!-- MAKE IT THE SAME BELOW -->
-
-	<!-- *************************************************************** -->
-	<!--             ********    MAC    **********                   -->
-	<!-- *************************************************************** -->
-
-    <!-- DANGER DEV Deletes the existing directory-->
-
-    <target name="mac.plugin.clean">
-        <delete dir="${mac.dir}" />
-    </target>
+	<fail unless="plugin.name"/>
 
 
 
-    <!-- DANGER  SINGLE Deletes the PLUGIN directory-->
-    <target name="single.clean">
-        <delete dir="${mac.plugin.dir}" />
-    </target>
+	<!-- MAKE IT THE SAME BELOW -->
+	<!-- MAKE IT THE SAME BELOW -->
+
+	<!-- DANGER DEV Deletes the existing directory-->
+
+	<target name="mac.plugin.clean" description="DELETES PLUGIN DIRECTORY">
+		<delete dir="${mac.dir}" />
+	</target>
 
 
 
-	<!-- *************************************************************** -->
-	<!--             ********    Windows    **********                   -->
-	<!-- *************************************************************** -->
+	<!-- DANGER  SINGLE Deletes the PLUGIN directory-->
+	<target name="single.clean">
+		<delete dir="${mac.plugin.dir}" />
+	</target>
 
 
-    <!-- WINDOWS Deletes the existing directory-->
-    <target name="win.plugin.clean">
-        <delete dir="${win.dir}" />
-    </target>
+
+	<!-- WINDOWS Deletes the existing directory-->
+	<target name="win.plugin.clean">
+		<delete dir="${win.dir}" />
+	</target>
 
 
-    <!-- WINDOWS WAMP Deletes the PLUGIN & CREATES the directory-->
-    <target name="win.clean">
-        <delete dir="${win.plugin.dir}" />
-        <mkdir dir="${win.plugin.dir}" />
-    </target>
+	<!-- WINDOWS WAMP Deletes the PLUGIN & CREATES the directory-->
+	<target name="win.clean">
+		<delete dir="${win.plugin.dir}" />
+		<mkdir dir="${win.plugin.dir}" />
+	</target>
 
 
 	<!-- *************************************************************** -->
@@ -91,140 +83,223 @@
 
 
 
-    <target name="build.clean">
-			<echo message="delete the build and dist directories ..." level="info"/>
-        <delete dir="${build.dir}" />
-        <delete dir="${dist.dir}" />
-				<delete dir="${src.dir}" />
-    </target>
-
-
-
-
-
-
-
-
-
-
-
-    <!-- Creates the  build & moves the files directory-->
-    <target name="makedir" depends="build.clean">
-			<echo message="making build and dist directories ..." level="info"/>
-        <mkdir dir="${build.dir}" />
-        <mkdir dir="${build.dir}/${plugin.name}" />
-        <mkdir dir="${dist.dir}" />
-				<mkdir dir="${src.dir}" />
-    </target>
-
-
-    <target name="make" depends="makedir, readme" description="Performs the build">
-        <copy todir="${build.dir}/${plugin.name}">
-            <fileset dir="."
-                     includes="**/*.php"
-                     excludes="**/templates/,**/testing/,**/tests/,**/src"
-                    />
-        </copy>
-
-        <copy todir="${build.dir}/${plugin.name}/inc">
-            <fileset dir="inc"/>
-        </copy>
-
-
-    </target>
-
-    <target name="readme" description="Makes the plugin readme.txt file">
-        <echo message="Generating readme file ..." level="info"/>
-        <copy todir="${build.dir}/${plugin.name}">
-            <fileset dir="."/>
-            <globmapper from="plugin_readme.md" to="readme.txt"/>
-            <filterset>
-                <filter token="BUILD" value="${plugin.version}"/>
-            </filterset>
-
-        </copy>
-
-    </target>
-
-	<target name="svnSrc" depends="make" description="SVN ANT is worryingly simple">
-		<copy todir="${src.dir}/trunk">
-			<fileset dir="${build.dir}/${plugin.name}"/>
-		</copy>
+	<target name="build.clean">
+		<echo message="delete the build and dist directories ..." level="info"/>
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
 	</target>
 
 
 
 
 
-    <target name="mac_zip" depends="makedir, make, readme">
-			<echo message="making the zip ..." level="info"/>
-        <zip destfile="${dist.dir}/${plugin.name}.zip"
-             basedir="/${build.dir}"
-                />
-			<echo message="storing a copy in DropBox ..." level="info"/>
-        <zip destfile="/Volumes/Proust/dropbox/_plugins/${plugin.name}.zip"
-             basedir="/${build.dir}"
-                />
-    </target>
 
-    <target name="win_zip" depends="win.clean,make">
-			<echo message="win zip is funny ..." level="info"/>
-        <zip destfile="${dist.dir}/${plugin.name}.zip"
-             basedir="${plugin.name}"
-                />
 
-    </target>
+
+
+
+
+	<!-- Creates the  build & moves the files directory-->
+	<target name="makedir" depends="build.clean">
+		<echo message="making build and dist directories ..." level="info"/>
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.dir}/${plugin.name}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+	<target name="make" depends="makedir" description="makes the magic">
+		<fail unless="plugin.build"/>
+		<copy todir="${build.dir}/${plugin.name}" failonerror="false">
+			<fileset dir="."
+							 includes="**/*.php"
+							 excludes="**/templates/,**/testing/,**/tests/"
+					/>
+		</copy>
+
+		<copy todir="${build.dir}/${plugin.name}/inc" failonerror="false">
+			<fileset dir="inc"/>
+		</copy>
+
+		<copy todir="${build.dir}/${plugin.name}/js" failonerror="false">
+			<fileset dir="js/"
+							 includes="**/*.js"
+							 excludes="**/examples/,**/testing/,**/test/"/>
+		</copy>
+
+
+	</target>
+
+	<target name="readme">
+		<echo message="Generating readme file ..." level="info" description="makes readme txt"/>
+		<copy todir="${build.dir}/${plugin.name}">
+			<fileset dir="."/>
+			<globmapper from="plugin_readme.md" to="readme.txt"/>
+			<filterset>
+				<filter token="BUILD" value="${plugin.version}"/>
+				<filter token="STABLE" value="${plugin.stable}"/>
+				<filter token="SHORTDESC" value="${plugin.short}"/>
+				<filter token="MKTGNAME" value="${plugin.mktg.name}"/>
+				<filter token="CHANGELOG" value="${plugin.changelog.version}"/>
+			</filterset>
+
+		</copy>
+
+	</target>
+
+	<target name="dev.json">
+		<echo file="dev-${plugin.name}.json" append="false">
+			{
+			"name" : "${plugin.name}",
+			"slug" : "${plugin.name}",
+			"homepage" : "http://wordpress.damien.co/${plugin.name}/",
+			"download_url" : "http://whitetshirtdigital.co.uk/plugins/${plugin.name}/${plugin.name}.zip",
+			"version" : "${plugin.build}",
+			"requires" : "3.3",
+			"tested" : "3.5.1",
+			"last_updated" : "2013-02-24 16:00:00",
+			"upgrade_notice" : "${plugin.changelog.version}",
+			"author" : "Damien Saunders",
+			"author_homepage" : "http://damien.co/",
+			"sections" : {
+			"description" : "${plugin.short}",
+			"installation_notes" : "Click install to download and automatically update to the new version..",
+			"changelog" : "This section list's what's changed. \n 1.7 - New Shortcode functions \n -Added pagination"
+			},
+			"downloaded" : 100
+			}
+		</echo>
+	</target>
+
+
+
+
+
+	<target name="mac_zip" depends="makedir, make, readme">
+		<echo message="making the zip ..." level="info"/>
+		<zip destfile="${dist.dir}/${plugin.name}.zip"
+				 basedir="/${build.dir}"
+				/>
+		<echo message="storing a copy in DropBox ..." level="info"/>
+		<zip destfile="/Volumes/Proust/dropbox/_plugins/${plugin.name}.zip"
+				 basedir="/${build.dir}"
+				/>
+	</target>
+
+	<target name="win_zip" depends="win.clean,make">
+		<echo message="win zip is funny ..." level="info"/>
+		<zip destfile="${dist.dir}/${plugin.name}.zip"
+				 basedir="${plugin.name}"
+				/>
+
+	</target>
+
+
 
 	<!-- *************************************************************** -->
-	<!--   You need WP CLI for this                                      -->
+	<!--   FTP FTP FTP FTP FTP FTP                                       -->
 	<!-- *************************************************************** -->
-    <target name="wp.status">
-        <echo message="Checking WP Status..." />
 
-        <exec executable="wp" dir=".">
-            <arg line="plugin status ${plugin.name}" />
-        </exec>
-    </target>
+	<target name="ftp.damien" description="FTP STUFF" depends="mac_zip">
+		<echo message="ftp mkdir if doesnt exist ..." />
+		<ftp action="mkdir"
+				 remotedir="${server.dir}/${plugin.name}"
+				 server="${server.host}"
+				 userid="${server.user}"
+				 password="${server.pass}"
+				 verbose="true"/>
+
+
+		<echo message="ftp ftp ftp ..." />
+		<ftp server="${server.host}"
+				 remotedir="${server.dir}/${plugin.name}"
+				 userid="${server.user}"
+				 password="${server.pass}"
+				 verbose="true"
+				 passive="true">
+			<fileset dir="${dist.dir}"/>
+		</ftp>
+	</target>
+
+
+
+	<!-- *************************************************************** -->
+	<!--   JENKINS JENKINS JENKINS                                       -->
+	<!-- *************************************************************** -->
+
+	<target name="jenkins-build">
+		<!-- Clean -->
+		<antcall target="win.clean"></antcall>
+		<antcall target="make"></antcall>
+		<antcall target="win_zip"></antcall>
+		<antcall target="ftp.damien"></antcall>
+		<antcall target="dev.json"></antcall>
+	</target>
+
+
+
+
+	<!-- *************************************************************** -->
+	<!--             ******** WP-CLI **********                       -->
+	<!-- *************************************************************** -->
+
+	<target name="wp.status" description="WP-CLI check plugin state">
+		<echo message="Checking ${plugin.name} Status..." />
+
+		<exec executable="wp" dir=".">
+			<arg line="plugin status ${plugin.name}" />
+		</exec>
+	</target>
+
+	<target name="wp.install" description="WP-CLI install plugin">
+		<echo message="Installing ${plugin.name}..." />
+
+		<exec executable="wp" dir=".">
+			<arg line="plugin install ${dist.dir}/${plugin.name}.zip" />
+		</exec>
+	</target>
+
+	<target name="wp.activate" depends="wp.install" description="WP-CLI activate plugin">
+		<echo message="Activating ${plugin.name}..." />
+
+		<exec executable="wp" dir=".">
+			<arg line="plugin activate ${plugin.name}" />
+		</exec>
+	</target>
+
+	<target name="wp.deactivate" description="WP-CLI deactivate plugin">
+		<echo message="Deactivating ${plugin.name}..." />
+
+		<exec executable="wp" dir=".">
+			<arg line="plugin deactivate ${plugin.name}.zip" />
+		</exec>
+	</target>
+
+	<target name="wp.delete" description="WP-CLI deactivate plugin">
+		<echo message="Deleting ${plugin.name}..." />
+
+		<exec executable="wp" dir=".">
+			<arg line="plugin delete ${plugin.name}.zip" />
+		</exec>
+	</target>
+
+
+
 
 	<!-- *************************************************************** -->
 	<!--             ******** SVN STUFF **********                       -->
 	<!-- *************************************************************** -->
 
-
+	<property name="svn.base.url" value="${svn.repository.url}/${svn.project.base.path}"/>
 
 	<target name="check-abc">
-		<available file="deploy.properties" property="abc.present"/>
+		<available file="build.properties" property="abc.present"/>
 	</target>
 
 	<target name="do-if-abc" depends="check-abc" if="abc.present">
 		<property file="deploy.properties"></property>
-		<property name="svn.base.url" value="${svn.repository.url}/${svn.project.base.path}"/>
 	</target>
 
 
-	<!-- ****************************************************************** -->
-	<!-- svnCheckout:                                                          -->
-	<!--                                                                     -->
-	<!-- ******************************************************************* -->
-	<target name="svnCheckout" depends="do-if-abc, makedir">
-		<property name="source-root" value="/src"/>
-		<property name="src.url"  value="${svn.base.url}/trunk/"/>
-		<fail unless="svn.username"/>
-		<java classname="org.tmatesoft.svn.cli.SVN"
-					dir="${src.dir}" fork="true">
-			<arg value="co"/>
-			<arg value="--username"/>
-			<arg value="${svn.username}"/>
-			<arg value="--password"/>
-			<arg value="${svn.password}"/>
-			<arg value="${src.url}"/>
-			<classpath>
-				<fileset dir="${ant.home}/lib">
-					<include name="**/*.jar"/>
-				</fileset>
-			</classpath>
-		</java>
-	</target>
 
 
 
@@ -236,43 +311,37 @@
 	<!--                                                                     -->
 	<!-- ******************************************************************* -->
 
-	<target name="svnCommit" depends="do-if-abc, make" description="Perform SVN Commit">
-		<property name="svn.tag.message" value="Commit for Project ${ant.project.name} with tag name ${tag.name} to trunk "/>
-		<property name="dest.url"  value="${svn.base.url}/trunk/"/>
-		<record name="${build.dir}/logfile.txt" action="start" append="true" />
-		<echo message="${svn.tag.message}"/>
-		<echo message="${src.url}"/>
-		<echo message="${dest.url}"/>
-		<fail unless="svn.username"/>
+	<target name="svnCommit" depends="do-if-abc">
+
 		<java classname="org.tmatesoft.svn.cli.SVN"
-					dir="${src.dir}/trunk" fork="true">
+					dir="${build.dir}" fork="true">
 			<arg value="commit"/>
 			<arg value="--username"/>
 			<arg value="${svn.username}"/>
 			<arg value="-m"/>
-			<arg value="${svn.tag.message}"/>
+			<arg value='"Testing"'/>
+			<arg value="${svn.base.url}"/>
 			<classpath>
 				<fileset dir="${ant.home}/lib">
 					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
 		</java>
-		<record name="${build.dir}/logfile.txt" action="stop"/>
 	</target>
 
 	<!-- ****************************************************************** -->
 	<!-- svntag: performs tagging using properties from                              -->
 	<!--         build.properties and uses SVNANT tasks                              -->
 	<!-- ******************************************************************* -->
-	<target name="svntag" description="tags individual project using svnant task" depends="do-if-abc,makedir">
+	<target name="svntag" description="tags individual project using svnant task" depends="do-if-abc">
 		<property name="svn.tag.message" value="Tagging Project ${ant.project.name} with tag name ${tag.name} from trunk "/>
 		<property name="src.url"  value="${svn.base.url}/trunk/"/>
 		<property name="dest.url" value="${svn.base.url}/tags/${tag.name}"/>
-		<record name="${build.dir}/logfile.txt" action="start" append="true" />
+		<record name="logfile.txt" action="start" append="true" />
 		<echo message="${svn.tag.message}"/>
 		<echo message="${src.url}"/>
 		<echo message="${dest.url}"/>
-		<fail unless="svn.username"/>
+
 		<java classname="org.tmatesoft.svn.cli.SVN">
 			<arg value="copy"/>
 			<arg value="${src.url}"/>
@@ -285,11 +354,11 @@
 			<arg value="${svn.tag.message}"/>
 			<classpath>
 				<fileset dir="${ant.home}/lib">
-				<include name="**/*.jar"/>
+					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
 		</java>
-		<record name="${build.dir}/logfile.txt" action="stop"/>
+		<record name="logfile.txt" action="stop"/>
 	</target>
 
 
