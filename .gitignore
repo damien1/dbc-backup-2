@@ -11,3 +11,5 @@ tags/
 damien.xml
 .idea
 cache.properties
+
+/vendor/
