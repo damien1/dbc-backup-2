@@ -3,7 +3,7 @@
 Plugin Name: DBC Backup 2
 Plugin URI: http://wordpress.damien.co/plugins?utm_source=WordPress&utm_medium=dbc-backup&utm_campaign=WordPress-Plugin&utm_keyword=source
 Description: Safe & easy backup for your WordPress database. Just schedule and forget.
-Version: 2.2.1
+Version: 2.3a
 Author: Damien Saunders
 Author URI: http://damien.co/?utm_source=WordPress&utm_medium=dbc-backup&utm_campaign=WordPress-Plugin&utm_keyword=source
 License: GPLv2 or later
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Globals
  */
-define ("DBCBACKUP2_VERSION", "2.2");
+define ("DBCBACKUP2_VERSION", "2.3");
 define ("PLUGIN_NAME", "dbc-backup-2");
 $plugin = plugin_basename(__FILE__);
 global $damien_dbc_option;
@@ -56,6 +56,8 @@ function dbcbackup_install()
 add_action('admin_init', 'damien_dbc_set_default_options');
 
 /**
+ * Here we add the plugin default settings
+ * Since v2.3 we set the default directory to wp-content/backup
  *
  */
 function damien_dbc_set_default_options() {
@@ -139,7 +141,7 @@ add_action('dbc_backup', 'dbcbackup_run');
 	return ($mode == 'auto' ? true : $cfg['logs']);
 }
 /*
- * i18n -- I need to local at the POT stuff for v2.2
+ * i18n -- I need to look at the POT stuff for v2.2
  */
 /**
  *
