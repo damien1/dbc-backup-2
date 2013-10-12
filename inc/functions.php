@@ -63,7 +63,10 @@ function dbcbackup_data($table, $fp)
 			$fieldcounter = -1;
 			$firstfield = 1;
 			while (++$fieldcounter < $numfields)
-			{	
+			{
+				//tmp array and array dereferencing here
+				$fields_tmp = array(1,2,3);
+
 				if (!$firstfield){
 					$res .= ', ';
 				}else{
@@ -74,7 +77,7 @@ function dbcbackup_data($table, $fp)
                 } elseif ($fields_meta[$fieldcounter]->numeric && $fields_meta[$fieldcounter]->type != 'timestamp'
                         && ! $fields_meta[$fieldcounter]->blob) {
                     $res .= $row[$fieldcounter];
-                } elseif (stristr($field_flags[$j], 'BINARY')
+                } elseif (stristr($fields_tmp[1], 'BINARY')
                         && isset($GLOBALS['hexforbinary'])
                         && $fields_meta[$fieldcounter]->type != 'datetime'
                         && $fields_meta[$fieldcounter]->type != 'date'
