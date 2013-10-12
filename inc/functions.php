@@ -18,7 +18,8 @@ function dbcbackup_structure($table, $fp)
 		$create_table = $row[1];
 		unset($row);
 		$create_table = preg_replace('/^CREATE TABLE/', 'CREATE TABLE IF NOT EXISTS', $create_table);
-		$create_table = preg_replace("/ENGINE\s?=/", "TYPE=", $create_table);
+		//@todo delete the next line if this works
+		//$create_table = preg_replace("/ENGINE\s?=/", "TYPE=", $create_table);
 		$create_table .= ";\n";
 		$res .= $create_table;
 		mysql_free_result($sql);
