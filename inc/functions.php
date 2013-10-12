@@ -1,6 +1,11 @@
 <?php
 
-function dbcbackup_structure($table, $fp)
+/**
+ * @param $table
+ * @param $fp
+ *
+ * @return bool
+ */function dbcbackup_structure($table, $fp)
 {	
 	$is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
 	if (!$is_safe_mode) set_time_limit(600);
@@ -38,7 +43,11 @@ function dbcbackup_structure($table, $fp)
 
 /* ------------------ */
 
-function dbcbackup_data($table, $fp)
+/**
+ * @param $table
+ * @param $fp
+ * @return bool
+ */function dbcbackup_data($table, $fp)
 {
 	$is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
 	if (!$is_safe_mode) set_time_limit(600);
@@ -115,7 +124,10 @@ function dbcbackup_data($table, $fp)
 }
 
 
-function dbcbackup_backquote($a_name)
+/**
+ * @param $a_name
+ * @return array|string
+ */function dbcbackup_backquote($a_name)
 {
 	//Add backqouotes to tables and db-names in SQL queries. Taken from phpMyAdmin.
 	if (!empty($a_name) && $a_name != '*') 
@@ -143,11 +155,13 @@ function dbcbackup_backquote($a_name)
 
 /* ------------------ */
 
-function dbcbackup_header()
+/**
+ * @return string
+ */function dbcbackup_header()
 {
-	$header  = "-- Database Cron Backup \n";
-	$header .= "-- Version 1.0 for Wordpress 2.5+ \n";
-	$header .= "-- Copyright Chris T aka Tefra http://www.t3-design.com \n";
+	$header  = "-- DBC Backup 2\n";
+	$header .= "-- Version 2.3 for Wordpress 3.6 \n";
+	$header .= "-- Plugin by Damien Saunders http://wordpress.damien.co \n";
 	$header .= "-- Generated: ".date('l dS \of F Y h:i A', time() + (get_option('gmt_offset') * 3600))." \n";
 	$header .= "-- MySQL Server: ".mysql_get_host_info()."\n";
 	$header .= "-- MySQL Server version: ".mysql_get_server_info()."\n";
@@ -158,7 +172,10 @@ function dbcbackup_header()
 
 /* ------------------ */
 
-function dbcbackup_fields($result) {
+/**
+ * @param $result
+ * @return array
+ */function dbcbackup_fields($result) {
     $fields       = 	array();
     $num_fields   = 	mysql_num_fields($result);
     for ($i = 0; $i < $num_fields; $i++) 
@@ -170,7 +187,13 @@ function dbcbackup_fields($result) {
 
 /* ------------------ */
 
-function dbcbackup_addslashes($a_string = '', $is_like = false, $crlf = false, $php_code = false)
+/**
+ * @param string $a_string
+ * @param bool   $is_like
+ * @param bool   $crlf
+ * @param bool   $php_code
+ * @return mixed
+ */function dbcbackup_addslashes($a_string = '', $is_like = false, $crlf = false, $php_code = false)
 {	//Taken from phpMyAdmin.
 	if ($is_like) {
 		$a_string = str_replace('\\', '\\\\\\\\', $a_string);
@@ -192,7 +215,11 @@ function dbcbackup_addslashes($a_string = '', $is_like = false, $crlf = false, $
 
 /* ------------------ */
 
-function dbcbackup_open($fp, $mode='write')
+/**
+ * @param        $fp
+ * @param string $mode
+ * @return array
+ */function dbcbackup_open($fp, $mode='write')
 {
 	switch(DBC_COMPRESSION)
 	{
@@ -222,7 +249,10 @@ function dbcbackup_open($fp, $mode='write')
 
 /* ------------------ */
 
-function dbcbackup_read($fp)
+/**
+ * @param $fp
+ * @return string
+ */function dbcbackup_read($fp)
 {
 	switch(DBC_COMPRESSION)
 	{
@@ -243,7 +273,10 @@ function dbcbackup_read($fp)
 
 /* ------------------ */
 
-function dbcbackup_write($fp, $code)
+/**
+ * @param $fp
+ * @param $code
+ */function dbcbackup_write($fp, $code)
 {	
 	switch(DBC_COMPRESSION)
 	{
@@ -264,7 +297,9 @@ function dbcbackup_write($fp, $code)
 
 /* ------------------ */
 
-function dbcbackup_close($fp)
+/**
+ * @param $fp
+ */function dbcbackup_close($fp)
 {
 	switch(DBC_COMPRESSION)
 	{
@@ -285,7 +320,11 @@ function dbcbackup_close($fp)
 
 /* ------------------ */
 
-function dbcbackup_rotate($cfg, $timenow)
+/**
+ * @param $cfg
+ * @param $timenow
+ * @return int
+ */function dbcbackup_rotate($cfg, $timenow)
 {
 	$removed = 0;
 	if($cfg['rotate'] >= 0)
