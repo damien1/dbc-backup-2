@@ -108,7 +108,17 @@
 	</target>
 
 	<target name="make" depends="makedir" description="makes the magic">
-		<fail unless="plugin.build"/>
+
+		<fail message="Files are missing.">
+			<condition>
+				<not>
+					<resourcecount count="1">
+						<fileset id="fs" dir="." includes="build.properties"/>
+					</resourcecount>
+				</not>
+			</condition>
+		</fail>
+
 		<copy todir="${build.dir}/${plugin.name}" failonerror="false">
 			<fileset dir="."
 							 includes="**/*.php"
@@ -131,6 +141,17 @@
 
 	<target name="readme">
 		<echo message="Generating readme file ..." level="info" description="makes readme txt"/>
+
+		<fail message="Files are missing.">
+			<condition>
+				<not>
+					<resourcecount count="1">
+						<fileset id="fs" dir="." includes="build.properties"/>
+					</resourcecount>
+				</not>
+			</condition>
+		</fail>
+
 		<copy todir="${build.dir}/${plugin.name}">
 			<fileset dir="."/>
 			<globmapper from="plugin_readme.md" to="readme.txt"/>
@@ -174,7 +195,7 @@
 
 
 
-	<target name="mac_zip" depends="makedir, make, readme">
+	<target name="mac_zip" depends="makedir, make, readme" description="makes the Mac ZIP">
 		<echo message="making the zip ..." level="info"/>
 		<zip destfile="${dist.dir}/${plugin.name}.zip"
 				 basedir="/${build.dir}"
@@ -185,7 +206,7 @@
 				/>
 	</target>
 
-	<target name="win_zip" depends="win.clean,make">
+	<target name="win_zip" depends="win.clean,make" description="makes the Win Zip ">
 		<echo message="win zip is funny ..." level="info"/>
 		<zip destfile="${dist.dir}/${plugin.name}.zip"
 				 basedir="${plugin.name}"
