@@ -11,9 +11,8 @@
 	if (!$is_safe_mode) set_time_limit(600);
 	$res ='';
 	$res .= "\n";
-	$res .= "--\n";
-	$res .= "-- Table structure of table ".dbcbackup_backquote($table)."\n";
-	$res .= "--\n";
+	$res .= "# Table structure of table ".dbcbackup_backquote($table)."\n";
+	$res .= "# ------------------------------------------------------- \n";
 	$res .= "\n";
 
 	if($sql = mysql_query("SHOW CREATE TABLE ".dbcbackup_backquote($table)))
@@ -53,9 +52,8 @@
 	if (!$is_safe_mode) set_time_limit(600);
 	$res ='';
 	$res .= "\n";
-	$res .= "--\n";
-	$res .= "-- Dumping data for table ".dbcbackup_backquote($table)."\n";
-	$res .= "--\n";
+	$res .= "# Dumping data for table ".dbcbackup_backquote($table)."\n";
+	$res .= "# ----------------------------------------------------- \n";
 	$res .= "\n";
 	dbcbackup_write($fp, $res);
 		
@@ -156,17 +154,22 @@
 /* ------------------ */
 
 /**
+ * This is the header of the SQL file
  * @return string
- */function dbcbackup_header()
+ */
+function dbcbackup_header()
 {
-	$header  = "-- DBC Backup 2\n";
-	$header .= "-- Version 2.3 for Wordpress 3.6 \n";
-	$header .= "-- Plugin by Damien Saunders http://wordpress.damien.co \n";
-	$header .= "-- Generated: ".date('l dS \of F Y h:i A', time() + (get_option('gmt_offset') * 3600))." \n";
-	$header .= "-- MySQL Server: ".mysql_get_host_info()."\n";
-	$header .= "-- MySQL Server version: ".mysql_get_server_info()."\n";
-	$header .= "-- Database: ".dbcbackup_backquote(DB_NAME)."\n";
-	$header .= "-- -------------------------------------------------------- \n";
+	$header = "# ####################################################### \n";
+	$header .= "#  \n";
+	$header .= "# DBC Backup 2\n";
+	$header .= "# Version 2.3 for Wordpress 3.6 \n";
+	$header .= "# Plugin by Damien Saunders http://wordpress.damien.co \n";
+	$header .= "# Generated: ".date('l dS \of F Y h:i A', time() + (get_option('gmt_offset') * 3600))." \n";
+	$header .= "# MySQL Server: ".mysql_get_host_info()."\n";
+	$header .= "# MySQL Server version: ".mysql_get_server_info()."\n";
+	$header .= "# Database: ".dbcbackup_backquote(DB_NAME)."\n";
+	$header .= "#  \n";
+	$header .= "# ####################################################### \n";
 	return $header;
 }
 
@@ -216,10 +219,12 @@
 /* ------------------ */
 
 /**
+ * PHP file write and compression settings
  * @param        $fp
  * @param string $mode
  * @return array
- */function dbcbackup_open($fp, $mode='write')
+ */
+function dbcbackup_open($fp, $mode='write')
 {
 	switch(DBC_COMPRESSION)
 	{

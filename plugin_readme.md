@@ -2,9 +2,9 @@
 Contributors: damiensaunders
 Donate link: 
 Tags: Database, Cron, Backup, Schedule, SQL, data, extract
-Requires at least: 3.0
-Tested up to: 3.6
-Stable tag: @STABLE@
+Requires at least: 3.6
+Tested up to: @STABLE@
+Stable tag: @BUILD@
 
 @SHORTDESC@
 
