@@ -25,14 +25,14 @@ global $plugin;
 
 
 /**
- * Gets the stored presets from the database
+ * Gets the stored presets from the database so we can use them in the Admin page
+ * since v2.1
  * @return mixed
  */
 function dbc_get_global_options(){
 	$damien_dbc_option  = get_option('dbcbackup_options');
 	return $dbc_option;
 }
-
 
 
 /**
@@ -58,43 +58,35 @@ add_action('admin_init', 'damien_dbc_set_default_options');
 
 
 
-/**
- *  Uninstall function
- */
-function dbcbackup_uninstall()
-{
-	wp_clear_scheduled_hook('dbc_backup');	
-	delete_option('dbcbackup_options');
-}
-register_deactivation_hook(__FILE__, 'dbcbackup_uninstall');
-
-add_action('dbc_backup', 'dbcbackup_run');
-
 
 /**
  * @param string $mode
  *
  * @return array|bool
- */function dbcbackup_run($mode = 'auto')
+ */
+
+require_once ('inc/backup_run.php');
+
+/*function dbcbackup_run($mode = 'auto')
 {
 	if(defined('DBC_BACKUP_RETURN')) return;
-	$cfg = get_option('dbcbackup_options'); 
+	$cfg = get_option('dbcbackup_options');
 	if(!$cfg['active'] AND $mode == 'auto') return;
 	if(empty($cfg['export_dir'])) return;
 	if($mode == 'auto')	dbcbackup_locale();
-	
+
 	require_once ('inc/functions.php');
 	define('DBC_COMPRESSION', $cfg['compression']);
 	define('DBC_GZIP_LVL', $cfg['gzip_lvl']);
 	define('DBC_BACKUP_RETURN', true);
-	
+
 	$timenow 			= 	time();
 	$mtime 				= 	explode(' ', microtime());
 	$time_start 		= 	$mtime[1] + $mtime[0];
 	$key 				= 	substr(md5(md5(DB_NAME.'|'.microtime())), 0, 6);
 	$date 				= 	date('m.d.y-H.i.s', $timenow);
 	list($file, $fp) 	=	dbcbackup_open($cfg['export_dir'].'/Backup_'.$date.'_'.$key);
-	
+
 	if($file)
 	{
 		$removed = dbcbackup_rotate($cfg, $timenow);
@@ -102,7 +94,7 @@ add_action('dbc_backup', 'dbcbackup_run');
 		$sql = mysql_query("SHOW TABLE STATUS FROM ".DB_NAME);
 		dbcbackup_write($file, dbcbackup_header());
 		while ($row = mysql_fetch_array($sql))
-		{	
+		{
 			dbcbackup_structure($row['Name'], $file);
 			dbcbackup_data($row['Name'], $file);
 		}
@@ -116,14 +108,16 @@ add_action('dbc_backup', 'dbcbackup_run');
 	$mtime 			= 	explode(' ', microtime());
 	$time_end 		= 	$mtime[1] + $mtime[0];
 	$time_total 	= 	$time_end - $time_start;
-	$cfg['logs'][] 	= 	array ('file' => $fp, 'size' => @filesize($fp), 'started' => $timenow, 'took' => $time_total, 'status'	=> $result, 'removed' => $removed);					
+	$cfg['logs'][] 	= 	array ('file' => $fp, 'size' => @filesize($fp), 'started' => $timenow, 'took' => $time_total, 'status'	=> $result, 'removed' => $removed);
 	update_option('dbcbackup_options', $cfg);
 	return ($mode == 'auto' ? true : $cfg['logs']);
 }
-/*
- * i18n -- I need to look at the POT stuff for v2.2
- */
+
+ add_action('dbc_backup', 'dbcbackup_run');*/
+
+
 /**
+ * i18n -- I need to look at the POT stuff for v2.2
  *
  */function dbcbackup_locale()
 {
@@ -147,7 +141,6 @@ add_action('admin_menu', 'dbcbackup_menu');
 /*
  * Add WP-Cron Job
  */
-add_filter('cron_schedules', 'dbcbackup_interval');
 /**
  * @return array
  */function dbcbackup_interval() {
@@ -155,14 +148,17 @@ add_filter('cron_schedules', 'dbcbackup_interval');
 	$cfg['period'] = ($cfg['period'] == 0) ? 86400 : $cfg['period'];
 	return array('dbc_backup' => array('interval' => $cfg['period'], 'display' => __('DBC Backup Interval', 'dbc_backup')));
 }
+add_filter('cron_schedules', 'dbcbackup_interval');
 
-/*
- * 2.1 Add settings link on Installed Plugin page
- */
+
 /**
+ * Add settings link on Installed Plugin page
+ * since v2.1
  * @param $links
  * @return mixed
- */function dbc_backup_settings_link($links) {
+ */
+
+function dbc_backup_settings_link($links) {
   $settings_link = '<a href="tools.php?page=dbc-backup-2/dbcbackup-options.php">Settings</a>'; 
   array_unshift($links, $settings_link); 
   return $links; 
@@ -172,12 +168,18 @@ $plugin = plugin_basename(__FILE__);
 add_filter("plugin_action_links_$plugin", 'dbc_backup_settings_link' );
 
 
-/*
+
+/* ------------------------------------------------------------------------ *
+ * Boring stuff
+ * ------------------------------------------------------------------------ */
+
+
+
+/**
  * RSS feed
  */
-/**
- *
- */function dbc_backup_rss_display()
+
+function dbc_backup_rss_display()
 {
 $dbc_feed = 'http://damien.co/feed';
 
@@ -193,5 +195,25 @@ wp_widget_rss_output( array(
 	));
 echo '</div>';
 }
+
+
+/* ------------------------------------------------------------------------ *
+ * If you delete the plugin - I'll feel sad
+ * ------------------------------------------------------------------------ */
+
+
+
+/**
+ *  Uninstall function
+ *  Ill be sorry to see you leave
+ */
+function dbcbackup_uninstall()
+{
+	wp_clear_scheduled_hook('dbc_backup');
+	delete_option('dbcbackup_options');
+}
+register_deactivation_hook(__FILE__, 'dbcbackup_uninstall');
+
+
 
 ?>
