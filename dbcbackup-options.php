@@ -2,11 +2,25 @@
 /*
 Plugin Options for DBC Backup 2
 */
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 if(!defined('WP_ADMIN') OR !current_user_can('manage_options')) wp_die(__('You do not have sufficient permissions to access this page.'));
 
+// @todo fix up the translations
 // dbcbackup_locale();
-$cfg = get_option('dbcbackup_options'); 
+
+
+
+/* ------------------------------------------------------------------------ *
+ * This is really important shit that shouldnt be in the admin page
+ * since version 0
+ * @todo yes one day ill move it from here.
+ * ------------------------------------------------------------------------ */
+
+
+
+$cfg = get_option('dbcbackup_options');
+
 if($_POST['quickdo'] == 'dbc_logerase')
 {
 	check_admin_referer('dbc_quickdo');
@@ -49,7 +63,8 @@ elseif($_POST['do'] == 'dbc_setup')
 	if($clear) 		wp_clear_scheduled_hook('dbc_backup');
 	if($schedule) 	wp_schedule_event($temp['schedule'], 'dbc_backup', 'dbc_backup');
 	$cfg = $temp;
-	?><div id="message" class="updated fade"><p><?php _e('Options saved.') ?></p></div><?php
+	?>
+	<div id="message" class="updated fade"><p><?php _e('Options saved.') ?></p></div><?php
 }
 
 $is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
@@ -62,7 +77,7 @@ if(!empty($cfg['export_dir']))
 
 		if(is_dir($cfg['export_dir']))
 		{
-			$dbc_msg[] = sprintf(__("Folder <strong>%s</strong> was created.", 'dbcbackup'), $cfg['export_dir']);
+			$dbc_msg[] = sprintf(__("Backup Folder <strong>%s</strong> was created.", 'dbcbackup'), $cfg['export_dir']);
 		}
 		else
 		{
@@ -71,7 +86,7 @@ if(!empty($cfg['export_dir']))
 	}
 	else
 	{
-		$dbc_msg[] = sprintf(__("Folder <strong>%s</strong> exists.", 'dbcbackup'), $cfg['export_dir']);
+		$dbc_msg[] = sprintf(__("Backup Folder <strong>%s</strong> exists.", 'dbcbackup'), $cfg['export_dir']);
 	}
 	
 	if(is_dir($cfg['export_dir']))
@@ -95,7 +110,7 @@ if(!empty($cfg['export_dir']))
 			}
 			else
 			{
-				$dbc_msg[] = sprintf(__("File <strong>%s</strong> exists.", 'dbcbackup'), $condom);
+				$dbc_msg[] = sprintf(__("<strong>%s</strong> protection exists.", 'dbcbackup'), $condom);
 			}
 		} 
 	}
@@ -104,6 +119,16 @@ else
 {
 	$dbc_msg[] = __('Specify the folder where the backups will be stored', 'dbcbackup');
 }
+
+
+/* ------------------------------------------------------------------------ *
+ * This is the layout for the Admin Page
+ * ------------------------------------------------------------------------ */
+
+
+
+
+
 
 /**
  *
@@ -128,8 +153,7 @@ else
 						<div class="postbox">
 							<h3><span>Thanks from Damien</span></h3>
 							<div class="inside">
-								<?php echo implode('<br />', $dbc_msg); ?>
-					<p>Thanks for installing this. <a target="_blank" href="http://damien.co/?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_campaign=WordPress-Plugin">Damien</a></p> 
+							Thanks for installing this. <a target="_blank" href="http://damien.co/?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_campaign=WordPress-Plugin">Damien</a></p>
 					<p>Please add yourself to <a target="_blank" href="http://wordpress.damien.co/wordpress-mailing-list/?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_campaign=WordPress-Plugin">my mailing list</a> to be the first to hear WordPress tips and updates for this plugin.</p>
 					<p>Let me and your friends know you installed this:</p>
 				<a href="https://twitter.com/share" class="twitter-share-button" data-text="I just installed DBC Backup 2 for WordPress" data-url="http://damiens.ws/MLLV3H" data-counturl="http://wordpress.damien.co/dbc-backup-2" data-count="horizontal" data-via="damiensaunders">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>	
