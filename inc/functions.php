@@ -29,7 +29,7 @@
 		mysql_free_result($sql);
 		$status = true;
 	}
-	else 
+	else
 	{
 		$tmp = mysql_error();
 		$res .= "--".$tmp;
@@ -56,7 +56,7 @@
 	$res .= "# ----------------------------------------------------- \n";
 	$res .= "\n";
 	dbcbackup_write($fp, $res);
-		
+
 	if($sql = mysql_query("SELECT * FROM ".dbcbackup_backquote($table)))
 	{
 		list($numfields, $fields_meta) = dbcbackup_fields($sql);
@@ -67,7 +67,7 @@
 		$replace      = array('\0', '\n', '\r', '\Z');
 		while ($row = mysql_fetch_array($sql))
 		{
-			$res = "INSERT INTO ".dbcbackup_backquote($table)." VALUES (";	
+			$res = "INSERT INTO ".dbcbackup_backquote($table)." VALUES (";
 			$fieldcounter = -1;
 			$firstfield = 1;
 			while (++$fieldcounter < $numfields)
@@ -103,8 +103,8 @@
                     $res .= "'".str_replace($search, $replace, dbcbackup_addslashes($row["$fieldcounter"]))."'";
                 } // end if
 			}
-			$res .= ");\n";	
-			dbcbackup_write($fp, $res);	
+			$res .= ");\n";
+			dbcbackup_write($fp, $res);
 		}
 		//$res = "UNLOCK TABLES;\n";
 		$res = '';
@@ -128,24 +128,24 @@
  */function dbcbackup_backquote($a_name)
 {
 	//Add backqouotes to tables and db-names in SQL queries. Taken from phpMyAdmin.
-	if (!empty($a_name) && $a_name != '*') 
+	if (!empty($a_name) && $a_name != '*')
 	{
-        if (is_array($a_name)) 
+        if (is_array($a_name))
 		{
 			$result = array();
 			reset($a_name);
-			while(list($key, $val) = each($a_name)) 
+			while(list($key, $val) = each($a_name))
 			{
 			  $result[$key] = '`' . $val . '`';
 			}
 			 return $result;
-        } 
-		else 
+        }
+		else
 		{
 			return '`' . $a_name . '`';
         }
-    } 
-	else 
+    }
+	else
 	{
         return $a_name;
     }
@@ -159,14 +159,16 @@
  */
 function dbcbackup_header()
 {
+	//@todo tidy this up
+	$link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
 	$header = "# ####################################################### \n";
 	$header .= "#  \n";
 	$header .= "# DBC Backup 2\n";
 	$header .= "# Version 2.3 for Wordpress 3.6 \n";
 	$header .= "# Plugin by Damien Saunders http://wordpress.damien.co \n";
 	$header .= "# Generated: ".date('l dS \of F Y h:i A', time() + (get_option('gmt_offset') * 3600))." \n";
-	$header .= "# MySQL Server: ".mysql_get_host_info()."\n";
-	$header .= "# MySQL Server version: ".mysql_get_server_info()."\n";
+	$header .= "# MySQL Server: ".mysqli_get_host_info($link)."\n";
+	$header .= "# MySQL Server version: ".mysqli_get_server_info($link)."\n";
 	$header .= "# Database: ".dbcbackup_backquote(DB_NAME)."\n";
 	$header .= "#  \n";
 	$header .= "# ####################################################### \n";
@@ -181,7 +183,7 @@ function dbcbackup_header()
  */function dbcbackup_fields($result) {
     $fields       = 	array();
     $num_fields   = 	mysql_num_fields($result);
-    for ($i = 0; $i < $num_fields; $i++) 
+    for ($i = 0; $i < $num_fields; $i++)
 	{
         $fields[] = mysql_fetch_field($result, $i);
     }
@@ -362,5 +364,3 @@ function dbcbackup_open($fp, $mode='write')
 	}
 	return $removed;
 }
-
-?>
