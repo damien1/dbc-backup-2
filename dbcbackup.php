@@ -25,6 +25,7 @@ global $plugin;
 
 
 /**
+ * Gets the stored presets from the database
  * @return mixed
  */
 function dbc_get_global_options(){
@@ -33,27 +34,6 @@ function dbc_get_global_options(){
 }
 
 
-
-
-
-
-/*
- * Save User Options to WPDB
- */	
-//add_action('activate_dbcbackup/dbcbackup.php', 'dbcbackup_install');
-/**
- *
- */
-function dbcbackup_install()
-{
-	$options = array('export_dir' => '', 'compression' => 'none', 'gzip_lvl' => 0, 'period' => 86400,  'schedule' => time(), 'active' => 0, 'rotate' => -1);
-	add_option('dbcbackup_options', $options, '', 'no');
-}
-
-/**
- * Add the default settings to the database
- */
-add_action('admin_init', 'damien_dbc_set_default_options');
 
 /**
  * Here we add the plugin default settings
@@ -72,8 +52,8 @@ function damien_dbc_set_default_options() {
 		$new_options['export_dir'] = "../wp-content/backup";
 		add_option('dbcbackup_options', $new_options);
 	}
-
 }
+add_action('admin_init', 'damien_dbc_set_default_options');
 
 
 
