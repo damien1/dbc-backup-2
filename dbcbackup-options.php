@@ -115,13 +115,20 @@ else
 			<div id="icon-options-general" class="icon32"></div>
 			<h2><?php _e('DBC Backup Options', 'dbcbackup'); ?></h2>
 			<div class="metabox-holder has-right-sidebar">
-	<div id="message" class="updated fade"><p><?php echo implode('<br />', $dbc_msg); ?></p></div>
+				<?php settings_errors();?>
+
 	<!-- SIDEBAR -->				
 			<div class="inner-sidebar">
-			
+			<div class="postbox">
+				<h3><span>Backup Settings Status</span></h3>
+				<div class="inside">
+					<?php echo implode('<br />', $dbc_msg); ?>
+					</div>
+				</div>
 						<div class="postbox">
 							<h3><span>Thanks from Damien</span></h3>
 							<div class="inside">
+								<?php echo implode('<br />', $dbc_msg); ?>
 					<p>Thanks for installing this. <a target="_blank" href="http://damien.co/?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_campaign=WordPress-Plugin">Damien</a></p> 
 					<p>Please add yourself to <a target="_blank" href="http://wordpress.damien.co/wordpress-mailing-list/?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_campaign=WordPress-Plugin">my mailing list</a> to be the first to hear WordPress tips and updates for this plugin.</p>
 					<p>Let me and your friends know you installed this:</p>
