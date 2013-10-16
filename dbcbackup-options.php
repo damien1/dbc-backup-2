@@ -21,18 +21,34 @@ if(!defined('WP_ADMIN') OR !current_user_can('manage_options')) wp_die(__('You d
 
 $cfg = get_option('dbcbackup_options');
 
-if($_POST['quickdo'] == 'dbc_logerase')
+if(isset($_POST['quickdo'])  )
+
+//if($_POST['quickdo'] == 'dbc_logerase')
 {
+
+	//Let $_POST['cscf']['country']= malaysia@email.com
+	// you can explode by @ and get the 0 index name of country
+	$cnt= $_POST['quickdo'];
+	  print_r($cnt);
+	//if(isset($cnt[0]))// check if name exists in email
+	//echo ucfirst($cnt[0]);// will echo Malaysia
+
+	 if ($cnt == 'dbc_logerase')
+{
+
+
+
 	check_admin_referer('dbc_quickdo');
 	$cfg['logs'] = array();
 	update_option('dbcbackup_options', $cfg);
 }
-elseif($_POST['quickdo'] == 'dbc_backupnow')
+elseif   ($cnt == 'dbc_backupnow')
+//($_POST['quickdo'] == 'dbc_backupnow')
 {
 	check_admin_referer('dbc_quickdo');
 	$cfg['logs'] = dbcbackup_run('backupnow');
 }
-elseif($_POST['do'] == 'dbc_setup')
+elseif ($_POST['do'] == 'dbc_setup')
 {
 	check_admin_referer('dbc_options');
 	$temp['export_dir']		=	rtrim(stripslashes_deep(trim($_POST['export_dir'])), '/');
@@ -65,6 +81,7 @@ elseif($_POST['do'] == 'dbc_setup')
 	$cfg = $temp;
 	?>
 	<div id="message" class="updated fade"><p><?php _e('Options saved.') ?></p></div><?php
+}
 }
 
 $is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
