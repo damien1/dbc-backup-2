@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Globals
  */
-define ("DBCBACKUP2_VERSION", "2.3");
+define ("DBCBACKUP2_VERSION", "2.3a");
 define ("PLUGIN_NAME", "dbc-backup-2");
 $plugin = plugin_basename(__FILE__);
 global $damien_dbc_option;
