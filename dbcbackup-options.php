@@ -14,13 +14,13 @@ if(!defined('WP_ADMIN') OR !current_user_can('manage_options')) wp_die(__('You d
 /* ------------------------------------------------------------------------ *
  * This is really important shit that shouldnt be in the admin page
  * since version 0
- * @todo yes one day ill move it from here.
+ * @todo move all the _POST URL stuff to a separate file
  * ------------------------------------------------------------------------ */
 
 
-
+  // first we get the options from the dbc
 $cfg = get_option('dbcbackup_options');
-
+  // then we check what the _POST value is
 if(isset($_POST['quickdo'])  )
 
 //if($_POST['quickdo'] == 'dbc_logerase')
@@ -28,15 +28,16 @@ if(isset($_POST['quickdo'])  )
 
 	//Let $_POST['cscf']['country']= malaysia@email.com
 	// you can explode by @ and get the 0 index name of country
+
+	// now we store the _POST value in a variable to do stuff with
 	$cnt= $_POST['quickdo'];
-	  print_r($cnt);
-	//if(isset($cnt[0]))// check if name exists in email
-	//echo ucfirst($cnt[0]);// will echo Malaysia
+	// uncomment the next line to print_r the value
+	// print_r($cnt);
 
 	 if ($cnt == 'dbc_logerase')
 {
 
-
+  //if the $cnt / _POST value is logerase we check admin referer and then delete the logs from db.
 
 	check_admin_referer('dbc_quickdo');
 	$cfg['logs'] = array();
@@ -45,11 +46,14 @@ if(isset($_POST['quickdo'])  )
 elseif   ($cnt == 'dbc_backupnow')
 //($_POST['quickdo'] == 'dbc_backupnow')
 {
+	//if $cnt is quickdo then we do a backupnow
 	check_admin_referer('dbc_quickdo');
 	$cfg['logs'] = dbcbackup_run('backupnow');
 }
 elseif ($_POST['do'] == 'dbc_setup')
 {
+	//elseif we assume the user is new and this is a fresh install :)
+
 	check_admin_referer('dbc_options');
 	$temp['export_dir']		=	rtrim(stripslashes_deep(trim($_POST['export_dir'])), '/');
 	$temp['compression']	=	stripslashes_deep(trim($_POST['compression']));
@@ -91,6 +95,14 @@ if(!empty($cfg['export_dir']))
 	{
 		@mkdir($cfg['export_dir'], 0777, true);
 		@chmod($cfg['export_dir'], 0777);
+
+		/* ------------------------------------------------------------------------ *
+		 * This is really important shit that shouldnt be in the admin page
+		 * since version 0
+		 * @todo move all the custom error messages to somewhere else
+		 * ------------------------------------------------------------------------ */
+
+
 
 		if(is_dir($cfg['export_dir']))
 		{
@@ -140,6 +152,9 @@ else
 
 /* ------------------------------------------------------------------------ *
  * This is the layout for the Admin Page
+ * since v2
+ * thanks to Frank Bueltge for his Admin Page template
+ * http://bueltge.de/
  * ------------------------------------------------------------------------ */
 
 
@@ -147,11 +162,6 @@ else
 
 
 
-/**
- *
- * DBC Backup
- * Options Panel
- **/
  ?>
 		<div class="wrap">
 			<div id="icon-options-general" class="icon32"></div>
@@ -315,7 +325,7 @@ else
 		   ?>
             <option value="<?php echo $i; ?>" <?php echo ($cfg['rotate'] == $i ? 'selected' : ''); ?>><?php echo $display; ?></option>
 			<?php endfor; ?>
-           </select></label><br /><?php _e('The deletion of the old backups occurs during new backup generation.', 'dbcbackup'); ?></td>
+           </select></label><br /><?php _e('Deletion of old backups occurs the next time a backup is run.', 'dbcbackup'); ?></td>
 		</tr>
 		 <tr>
 			<td colspan="2" align="center">
