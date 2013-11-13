@@ -17,42 +17,63 @@ if(!defined('WP_ADMIN') OR !current_user_can('manage_options')) wp_die(__('You d
  * @todo move all the _POST URL stuff to a separate file
  * ------------------------------------------------------------------------ */
 
+//variables we will use
+$temp='';
+$dbc_cnt='';
+
+
 
   // first we get the options from the dbc
 $cfg = get_option('dbcbackup_options');
   // then we check what the _POST value is
-if(isset($_POST['quickdo'])  )
+  // store the _POST variables so we can use them
 
-//if($_POST['quickdo'] == 'dbc_logerase')
+if (isset($_POST['quickdo']))
+{
+    $dbc_cnt = ($_POST['quickdo']);
+    // uncomment the next line to print_r the value
+    // echo "_post [quickdo] ";
+    //print_r($dbc_cnt);
+}
+
+elseif (isset($_POST['do']))
+{
+    $dbc_cnt = ($_POST['do']);
+    // echo "_post [do] ";
+    //   print_r($dbc_cnt2);
+
+}
+
+else {
+    //echo "nothing is set";
+    //unset($dbc_cnt);
+    }
+
+if ($dbc_cnt == 'dbc_logerase')
 {
 
-	//Let $_POST['cscf']['country']= malaysia@email.com
-	// you can explode by @ and get the 0 index name of country
-
-	// now we store the _POST value in a variable to do stuff with
-	$cnt= $_POST['quickdo'];
-	// uncomment the next line to print_r the value
-	// print_r($cnt);
-
-	 if ($cnt == 'dbc_logerase')
-{
-
-  //if the $cnt / _POST value is logerase we check admin referer and then delete the logs from db.
+  //if the $dbc_cnt / _POST value is logerase we check admin referer and then delete the logs from db.
 
 	check_admin_referer('dbc_quickdo');
 	$cfg['logs'] = array();
 	update_option('dbcbackup_options', $cfg);
 }
-elseif   ($cnt == 'dbc_backupnow')
-//($_POST['quickdo'] == 'dbc_backupnow')
-{
-	//if $cnt is quickdo then we do a backupnow
-	check_admin_referer('dbc_quickdo');
-	$cfg['logs'] = dbcbackup_run('backupnow');
-}
-elseif ($_POST['do'] == 'dbc_setup')
-{
-	//elseif we assume the user is new and this is a fresh install :)
+
+elseif   ($dbc_cnt == 'dbc_backupnow')
+    //($_POST['quickdo'] == 'dbc_backupnow')
+    {
+        //if $dbc_cnt is quickdo then we do a backupnow
+        check_admin_referer('dbc_quickdo');
+        $cfg['logs'] = dbcbackup_run('backupnow');
+    }
+//elseif ($_POST['do'] == 'dbc_setup')
+
+ elseif ($dbc_cnt == 'dbc_setup')
+    {
+        // echo "test";
+        //print_r($dbc_cnt);
+	//we check the admin referrer
+        // and setup the $temp values that we need
 
 	check_admin_referer('dbc_options');
 	$temp['export_dir']		=	rtrim(stripslashes_deep(trim($_POST['export_dir'])), '/');
@@ -73,6 +94,8 @@ elseif ($_POST['do'] == 'dbc_setup')
 	$temp['schedule'] 		= 	mktime($hours, $minutes, $seconds, $month, $day, $year);
 	update_option('dbcbackup_options', $temp);
 
+    // now we check and compare existing settings -- if the plugin has been installed and used ...
+
 	if($cfg['active'] AND !$temp['active']) $clear = true;
 	if(!$cfg['active'] AND $temp['active']) $schedule = true;
 	if($cfg['active'] AND $temp['active'] AND (array($hours, $minutes, $seconds) != explode('-', date('G-i-s', $cfg['schedule'])) OR $temp['period'] != $cfg['period']) )
@@ -82,12 +105,17 @@ elseif ($_POST['do'] == 'dbc_setup')
 	}
 	if($clear) 		wp_clear_scheduled_hook('dbc_backup');
 	if($schedule) 	wp_schedule_event($temp['schedule'], 'dbc_backup', 'dbc_backup');
-	$cfg = $temp;
-	?>
-	<div id="message" class="updated fade"><p><?php _e('Options saved.') ?></p></div><?php
-}
+	    // so finally if you are using the plugin for the first time ... $cfg = $temp
+        $cfg = $temp;
+        // if it saves ok ... we update the options
+        ?>
+
+        <div id="message" class="updated fade"><p><?php _e('Options saved.') ?></p></div><?php
 }
 
+
+
+// here we go make directories
 $is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
 if(!empty($cfg['export_dir']))
 {
@@ -150,17 +178,16 @@ else
 }
 
 
+
+
+
+
 /* ------------------------------------------------------------------------ *
  * This is the layout for the Admin Page
  * since v2
  * thanks to Frank Bueltge for his Admin Page template
  * http://bueltge.de/
  * ------------------------------------------------------------------------ */
-
-
-
-
-
 
  ?>
 		<div class="wrap">
