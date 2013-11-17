@@ -1,184 +1,14 @@
 <?php
 /*
 Plugin Options for DBC Backup 2
+
 */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 if(!defined('WP_ADMIN') OR !current_user_can('manage_options')) wp_die(__('You do not have sufficient permissions to access this page.'));
 
-// @todo fix up the translations
-// dbcbackup_locale();
-
-
-
-/* ------------------------------------------------------------------------ *
- * This is really important shit that shouldnt be in the admin page
- * since version 0
- * @todo move all the _POST URL stuff to a separate file
- * ------------------------------------------------------------------------ */
-
-//variables we will use
-$temp='';
-$dbc_cnt='';
-
-
-
-  // first we get the options from the dbc
-$cfg = get_option('dbcbackup_options');
-  // then we check what the _POST value is
-  // store the _POST variables so we can use them
-
-if (isset($_POST['quickdo']))
-{
-    $dbc_cnt = ($_POST['quickdo']);
-    // uncomment the next line to print_r the value
-    // echo "_post [quickdo] ";
-    //print_r($dbc_cnt);
-}
-
-elseif (isset($_POST['do']))
-{
-    $dbc_cnt = ($_POST['do']);
-    // echo "_post [do] ";
-    //   print_r($dbc_cnt2);
-
-}
-
-else {
-    //echo "nothing is set";
-    //unset($dbc_cnt);
-    }
-
-if ($dbc_cnt == 'dbc_logerase')
-{
-
-  //if the $dbc_cnt / _POST value is logerase we check admin referer and then delete the logs from db.
-
-	check_admin_referer('dbc_quickdo');
-	$cfg['logs'] = array();
-	update_option('dbcbackup_options', $cfg);
-}
-
-elseif   ($dbc_cnt == 'dbc_backupnow')
-    //($_POST['quickdo'] == 'dbc_backupnow')
-    {
-        //if $dbc_cnt is quickdo then we do a backupnow
-        check_admin_referer('dbc_quickdo');
-        $cfg['logs'] = dbcbackup_run('backupnow');
-    }
-//elseif ($_POST['do'] == 'dbc_setup')
-
- elseif ($dbc_cnt == 'dbc_setup')
-    {
-        // echo "test";
-        //print_r($dbc_cnt);
-	//we check the admin referrer
-        // and setup the $temp values that we need
-
-	check_admin_referer('dbc_options');
-	$temp['export_dir']		=	rtrim(stripslashes_deep(trim($_POST['export_dir'])), '/');
-	$temp['compression']	=	stripslashes_deep(trim($_POST['compression']));
-	$temp['gzip_lvl']		=	intval($_POST['gzip_lvl']);
-	$temp['period']			=	intval($_POST['severy']) * intval($_POST['speriod']);
-	$temp['active']			=	(bool)$_POST['active'];
-	$temp['rotate']			=	intval($_POST['rotate']);
-	$temp['logs']			=	$cfg['logs'];
-	
-	$timenow 				= 	time();
-	$year 					= 	date('Y', $timenow);
-	$month  				= 	date('n', $timenow);
-	$day   					= 	date('j', $timenow);
-	$hours   				= 	intval($_POST['hours']);
-	$minutes 				= 	intval($_POST['minutes']);
-	$seconds 				= 	intval($_POST['seconds']);
-	$temp['schedule'] 		= 	mktime($hours, $minutes, $seconds, $month, $day, $year);
-	update_option('dbcbackup_options', $temp);
-
-    // now we check and compare existing settings -- if the plugin has been installed and used ...
-
-	if($cfg['active'] AND !$temp['active']) $clear = true;
-	if(!$cfg['active'] AND $temp['active']) $schedule = true;
-	if($cfg['active'] AND $temp['active'] AND (array($hours, $minutes, $seconds) != explode('-', date('G-i-s', $cfg['schedule'])) OR $temp['period'] != $cfg['period']) )
-	{
-		$clear = true;
-		$schedule = true;
-	}
-	if($clear) 		wp_clear_scheduled_hook('dbc_backup');
-	if($schedule) 	wp_schedule_event($temp['schedule'], 'dbc_backup', 'dbc_backup');
-	    // so finally if you are using the plugin for the first time ... $cfg = $temp
-        $cfg = $temp;
-        // if it saves ok ... we update the options
-        ?>
-
-        <div id="message" class="updated fade"><p><?php _e('Options saved.') ?></p></div><?php
-}
-
-
-
-// here we go make directories
-$is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
-if(!empty($cfg['export_dir']))
-{
-	if(!is_dir($cfg['export_dir']) AND !$is_safe_mode)
-	{
-		@mkdir($cfg['export_dir'], 0777, true);
-		@chmod($cfg['export_dir'], 0777);
-
-		/* ------------------------------------------------------------------------ *
-		 * This is really important shit that shouldnt be in the admin page
-		 * since version 0
-		 * @todo move all the custom error messages to somewhere else
-		 * ------------------------------------------------------------------------ */
-
-
-
-		if(is_dir($cfg['export_dir']))
-		{
-			$dbc_msg[] = sprintf(__("Backup Folder <strong>%s</strong> was created.", 'dbcbackup'), $cfg['export_dir']);
-		}
-		else
-		{
-			$dbc_msg[] = $is_safe_mode ? __('PHP Safe Mode Is On', 'dbcbackup') : sprintf(__("Folder <strong>%s</strong> wasn't created, check permissions.", 'dbcbackup'), $cfg['export_dir']);								
-		}
-	}
-	else
-	{
-		$dbc_msg[] = sprintf(__("Backup Folder <strong>%s</strong> exists.", 'dbcbackup'), $cfg['export_dir']);
-	}
-	
-	if(is_dir($cfg['export_dir']))
-	{
-		$condoms = array('.htaccess', 'index.html');	
-		foreach($condoms as $condom)
-		{
-			if(!file_exists($cfg['export_dir'].'/'.$condom))
-			{
-				if($file = @fopen($cfg['export_dir'].'/'.$condom, 'w')) 
-				{	
-					$cofipr =  ($condom == 'index.html')? '' : "Order allow,deny\ndeny from all";
-					fwrite($file, $cofipr);
-					fclose($file);
-					$dbc_msg[] =  sprintf(__("File <strong>%s</strong> was created.", 'dbcbackup'), $condom);
-				}	
-				else
-				{
-					$dbc_msg[] = sprintf(__("File <strong>%s</strong> wasn't created, check permissions.", 'dbcbackup'), $condom);			
-				}
-			}
-			else
-			{
-				$dbc_msg[] = sprintf(__("<strong>%s</strong> protection exists.", 'dbcbackup'), $condom);
-			}
-		} 
-	}
-}
-else
-{
-	$dbc_msg[] = __('Specify the folder where the backups will be stored', 'dbcbackup');
-}
-
-
-
+//admin page functions
+require_once ('inc/admin-functions.php');
 
 
 
@@ -207,8 +37,8 @@ else
 						<div class="postbox">
 							<h3><span>Thanks from Damien</span></h3>
 							<div class="inside">
-							Thanks for installing this. <a target="_blank" href="http://damien.co/?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_campaign=WordPress-Plugin">Damien</a></p>
-					<p>Please add yourself to <a target="_blank" href="http://wordpress.damien.co/wordpress-mailing-list/?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_campaign=WordPress-Plugin">my mailing list</a> to be the first to hear WordPress tips and updates for this plugin.</p>
+							Thanks for installing this. <a target="_blank" href="http://damien.co/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.3&utm_campaign=WordPress-Plugin">Damien</a></p>
+					<p>Please add yourself to <a target="_blank" href="http://wordpress.damien.co/wordpress-mailing-list/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.3&utm_campaign=WordPress-Plugin">my mailing list</a> to be the first to hear WordPress tips and updates for this plugin.</p>
 					<p>Let me and your friends know you installed this:</p>
 				<a href="https://twitter.com/share" class="twitter-share-button" data-text="I just installed DBC Backup 2 for WordPress" data-url="http://damiens.ws/MLLV3H" data-counturl="http://wordpress.damien.co/dbc-backup-2" data-count="horizontal" data-via="damiensaunders">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>	
 			
@@ -219,8 +49,8 @@ else
 							<h3><span>Help & Support</span></h3>
 							<div class="inside">
 								<ul>
-								<li><a target="_blank" href="http://wordpress.damien.co/dbc-backup-2/?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_campaign=WordPress-Plugin">Help & FAQ's</a></li>
-								<li><a target="_blank" href="http://wordpress.damien.co/?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_campaign=WordPress-Plugin">More WordPress Tips & Ideas</a></li>
+								<li><a target="_blank" href="http://wordpress.damien.co/dbc-backup-2/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.3&utm_campaign=WordPress-Plugin">Help & FAQ's</a></li>
+								<li><a target="_blank" href="http://wordpress.damien.co/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.3&utm_campaign=WordPress-Plugin">More WordPress Tips & Ideas</a></li>
 								</ul>
 							</div>
 						</div>
@@ -229,7 +59,7 @@ else
 							<div class="inside">
 							<ul>
 								<li><a target="_blank" href="http://wordpress.damien.co/isotope/?utm_source=WordPress&utm_medium=dbc-sitewide-installed&utm_campaign=WordPress-Plugin">Isotope</a> - does amazing visual things for your website.</li>
-							<li><a target="_blank" href="http://whitetshirtdigital.com/shop/?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_campaign=WordPress-Plugin">Learn more about digital marketing or WordPress</a> with Damien.</li>
+							<li><a target="_blank" href="http://whitetshirtdigital.com/shop/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.3&utm_campaign=WordPress-Plugin">Learn more about digital marketing or WordPress</a> with Damien.</li>
 							</ul>
 							</div>
 						</div>			
