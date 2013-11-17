@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== @MARKETINGNAME@ ===
 Contributors: damiensaunders
 Donate link: 
 Tags: Database, Cron, Backup, Schedule, SQL, data, extract
