@@ -7,7 +7,7 @@
 	<loadproperties srcFile="single.properties" />
 	<loadproperties srcFile="win.properties" />
 	<loadproperties srcFile="deploy.properties" />
-
+    <loadproperties srcFile="build.number" />
 	<!-- Sets variables which can later be used. -->
 	<!-- The value of a property is accessed via ${} -->
 	<property name="src.dir" location="src" />
@@ -107,7 +107,7 @@
 		<mkdir dir="${dist.dir}" />
 	</target>
 
-	<target name="make" depends="makedir" description="makes the magic">
+	<target name="make" depends="makedir,readme" description="makes the magic">
 
 		<fail message="Files are missing.">
 			<condition>
@@ -118,12 +118,21 @@
 				</not>
 			</condition>
 		</fail>
-
-		<copy todir="${build.dir}/${plugin.name}" failonerror="false">
+        <buildnumber></buildnumber>
+        <echo>${build.number}</echo>
+		<copy todir="${build.dir}/${plugin.name}" failonerror="false" filtering="true">
 			<fileset dir="."
 							 includes="**/*.php"
 							 excludes="**/templates/,**/testing/,**/tests/"
 					/>
+            <filterset>
+                <filter token="PlUGINSTABLE" value="${plugin.stable}"/>
+                <filter token="THISBUILD" value="${build.version}.${build.number}"/>
+                <filter token="STABLE" value="${wordpress.stable}"/>
+                <filter token="SHORTDESC" value="${plugin.short}"/>
+                <filter token="MARKETINGNAME" value="${plugin.marketing}"/>
+                <filter token="CHANGELOG" value="${plugin.changelog.version}"/>
+            </filterset>
 		</copy>
 
 		<copy todir="${build.dir}/${plugin.name}/inc" failonerror="false">
@@ -156,11 +165,10 @@
 			<fileset dir="."/>
 			<globmapper from="plugin_readme.md" to="readme.txt"/>
 			<filterset>
-				<filter token="BUILD" value="${plugin.version}"/>
-				<filter token="STABLE" value="${plugin.stable}"/>
-				<filter token="SHORTDESC" value="${plugin.short}"/>
-				<filter token="MKTGNAME" value="${plugin.mktg.name}"/>
-				<filter token="CHANGELOG" value="${plugin.changelog.version}"/>
+                <filter token="PlUGINSTABLE" value="${plugin.stable}"/>
+                <filter token="THISBUILD" value="${build.version}.${build.number}"/>
+				<filter token="STABLE" value="${wordpress.stable}"/>
+				<filter token="PLUGINNAME" value="${plugin.name}"/>
 			</filterset>
 
 		</copy>
@@ -201,7 +209,7 @@
 				 basedir="/${build.dir}"
 				/>
 		<echo message="storing a copy in DropBox ..." level="info"/>
-		<zip destfile="/Volumes/Proust/dropbox/_plugins/${plugin.name}.zip"
+		<zip destfile="/Volumes/Proust/dropbox/_plugins/${plugin.name}-${plugin.version}.${plugin.build}.zip"
 				 basedir="/${build.dir}"
 				/>
 	</target>
