@@ -4,7 +4,7 @@ Donate link:
 Tags: Database, Cron, Backup, Schedule, SQL, data, extract
 Requires at least: 3.6
 Tested up to: @STABLE@
-Stable tag: @BUILD@
+Stable tag: @PlUGINSTABLE@
 
 @SHORTDESC@
 
