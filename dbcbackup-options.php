@@ -24,7 +24,12 @@ require_once ('inc/admin-functions.php');
 			<div id="icon-options-general" class="icon32"></div>
 			<h2><?php _e('DBC Backup Options', 'dbcbackup'); ?></h2>
 			<div class="metabox-holder has-right-sidebar">
-				<?php settings_errors();?>
+				<?php
+
+				//$screen = get_current_screen();
+                //                    print_r($screen->id);
+                //                        return $screen;
+				settings_errors();?>
 
 	<!-- SIDEBAR -->				
 			<div class="inner-sidebar">
@@ -37,7 +42,7 @@ require_once ('inc/admin-functions.php');
 						<div class="postbox">
 							<h3><span>Thanks from Damien</span></h3>
 							<div class="inside">
-							Thanks for installing this. <a target="_blank" href="http://damien.co/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.3&utm_campaign=WordPress-Plugin">Damien</a></p>
+							<?php echo 'Thank you for using version ' . DBCBACKUP2_VERSION; ?>. <a target="_blank" href="http://damien.co/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.3&utm_campaign=WordPress-Plugin">Damien</a></p>
 					<p>Please add yourself to <a target="_blank" href="http://wordpress.damien.co/wordpress-mailing-list/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.3&utm_campaign=WordPress-Plugin">my mailing list</a> to be the first to hear WordPress tips and updates for this plugin.</p>
 					<p>Let me and your friends know you installed this:</p>
 				<a href="https://twitter.com/share" class="twitter-share-button" data-text="I just installed DBC Backup 2 for WordPress" data-url="http://damiens.ws/MLLV3H" data-counturl="http://wordpress.damien.co/dbc-backup-2" data-count="horizontal" data-via="damiensaunders">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>	
