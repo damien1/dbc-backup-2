@@ -5,7 +5,7 @@ Plugin URI: http://wordpress.damien.co/plugins?utm_source=WordPress&utm_medium=d
 Description: Safe & easy backup for your WordPress database. Just schedule and forget.
 Version: @THISBUILD@
 Author: Damien Saunders
-Author URI: http://damien.co/?utm_source=WordPress&utm_medium=dbc-backup&utm_campaign=WordPress-Plugin&utm_keyword=source
+Author URI: http://damien.co/?utm_source=WordPress&utm_medium=@PLUGINNAME@-@THISBUILD@&utm_campaign=WordPress-Plugin&utm_keyword=source
 License: GPLv2 or later
 */
 
@@ -66,7 +66,7 @@ add_action('admin_init', 'damien_dbc_set_default_options');
  */
 // backup files
 require_once ('inc/backup_run.php');
-//functions for the admin page
+//functions for the admin page are called at the top of the options.php
 //require_once ('inc/admin-functions.php');
 //functions
 require_once ('inc/functions.php');
@@ -82,26 +82,40 @@ require_once ('inc/functions.php');
 	load_plugin_textdomain('dbcbackup', 'wp-content/plugins/dbc-backup-2');
 }
 
-/*
- * 2.1 Add Menu - moved to Tools
+/**
+ * Add Menu
+ * since v0
+ * v2.1 moved to Tools menu
+ * @todo v2.3 added helptab - work in progress
  */
+function dbcbackup_menu()
+{
+      global $dbc_backup_admin;
+      $dbc_backup_admin = add_management_page('DBC Backup', 'DBC Backup', 'manage_options', 'dbc_backup_admin', 'damien_dbc_inc_my_page');
+	  include dirname(__FILE__).'/inc/help_tab.php';
+        	// Adds my_help_tab when my_admin_page loads
+        	add_action('load-'.$dbc_backup_admin, 'damien_dbc_admin_add_help_tab');
+
+}
 add_action('admin_menu', 'dbcbackup_menu');
+
 /**
  *
- */function dbcbackup_menu()
+ */
+function damien_dbc_inc_my_page()
 {
-	if(function_exists('add_management_page')) 
-	{
-		add_management_page('DBC Backup', 'DBC Backup', 'manage_options', dirname(__FILE__).'/dbcbackup-options.php');
-	}
+	include dirname(__FILE__).'/dbcbackup-options.php';
 }
 
-/*
- * Add WP-Cron Job
- */
+
+
+
 /**
+ * Add WP-Cron Job
+ * since v0
  * @return array
- */function dbcbackup_interval() {
+ */
+ function dbcbackup_interval() {
 	$cfg = get_option('dbcbackup_options');
 	$cfg['period'] = ($cfg['period'] == 0) ? 86400 : $cfg['period'];
 	return array('dbc_backup' => array('interval' => $cfg['period'], 'display' => __('DBC Backup Interval', 'dbc_backup')));
@@ -115,7 +129,6 @@ add_filter('cron_schedules', 'dbcbackup_interval');
  * @param $links
  * @return mixed
  */
-
 function dbc_backup_settings_link($links) {
   $settings_link = '<a href="tools.php?page=dbc-backup-2/dbcbackup-options.php">Settings</a>'; 
   array_unshift($links, $settings_link); 
@@ -162,8 +175,9 @@ echo '</div>';
 
 
 /**
- *  Uninstall function
- *  Ill be sorry to see you leave
+ * Uninstall function
+ * Ill be sorry to see you leave
+ * since v2.1
  */
 function dbcbackup_uninstall()
 {
