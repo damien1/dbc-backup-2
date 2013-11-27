@@ -6,14 +6,16 @@
 
 
 /* ------------------------------------------------------------------------ *
- * This is really important shit that shouldnt be in the admin page
- * since version 0
+ * This is really important shit that was in the plugin admin page
+ * since version 2.3 moved to this
  * @todo move all the _POST URL stuff to a separate file
  * ------------------------------------------------------------------------ */
 
 //variables we will use
 $temp='';
 $dbc_cnt='';
+$clear='';
+$schedule='';
 
 
 
@@ -101,7 +103,7 @@ elseif   ($dbc_cnt == 'dbc_backupnow')
 	if($schedule) 	wp_schedule_event($temp['schedule'], 'dbc_backup', 'dbc_backup');
 	    // so finally if you are using the plugin for the first time ... $cfg = $temp
         $cfg = $temp;
-        // if it saves ok ... we update the options
+        // if it saves ok ... we display the message that the options were saved
         ?>
 
         <div id="message" class="updated fade"><p><?php _e('Options saved.') ?></p></div><?php
@@ -110,6 +112,7 @@ elseif   ($dbc_cnt == 'dbc_backupnow')
 
 
 // here we go make directories
+// @todo need to make this run when the plugin is installed.
 $is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
 if(!empty($cfg['export_dir']))
 {
@@ -120,7 +123,7 @@ if(!empty($cfg['export_dir']))
 
 		/* ------------------------------------------------------------------------ *
 		 * This is really important shit that shouldnt be in the admin page
-		 * since version 0
+		 * since version 2.3 moved to this file
 		 * @todo move all the custom error messages to somewhere else
 		 * ------------------------------------------------------------------------ */
 
