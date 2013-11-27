@@ -5,7 +5,8 @@
  * @param $fp
  *
  * @return bool
- */function dbcbackup_structure($table, $fp)
+ */
+ function dbcbackup_structure($table, $fp)
 {	
 	$is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
 	if (!$is_safe_mode) set_time_limit(600);
