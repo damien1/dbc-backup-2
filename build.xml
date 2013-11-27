@@ -126,6 +126,7 @@
 							 excludes="**/templates/,**/testing/,**/tests/"
 					/>
             <filterset>
+                <filter token="PLUGINNAME" value="${plugin.name}"/>
                 <filter token="PlUGINSTABLE" value="${plugin.stable}"/>
                 <filter token="THISBUILD" value="${build.version}.${build.number}"/>
                 <filter token="STABLE" value="${wordpress.stable}"/>
@@ -167,8 +168,10 @@
 			<filterset>
                 <filter token="PlUGINSTABLE" value="${plugin.stable}"/>
                 <filter token="THISBUILD" value="${build.version}.${build.number}"/>
-				<filter token="STABLE" value="${wordpress.stable}"/>
-				<filter token="PLUGINNAME" value="${plugin.name}"/>
+                <filter token="STABLE" value="${wordpress.stable}"/>
+                <filter token="SHORTDESC" value="${plugin.short}"/>
+                <filter token="MARKETINGNAME" value="${plugin.marketing}"/>
+                <filter token="CHANGELOG" value="${plugin.changelog.version}"/>
 			</filterset>
 
 		</copy>
@@ -209,7 +212,7 @@
 				 basedir="/${build.dir}"
 				/>
 		<echo message="storing a copy in DropBox ..." level="info"/>
-		<zip destfile="/Volumes/Proust/dropbox/_plugins/${plugin.name}-${plugin.version}.${plugin.build}.zip"
+		<zip destfile="/Volumes/Proust/dropbox/_plugins/${plugin.name}-${build.version}.${build.number}.zip"
 				 basedir="/${build.dir}"
 				/>
 	</target>
@@ -312,23 +315,27 @@
 	</target>
 
 
+    <!-- *************************************************************** -->
+    <!--             ******** INIT CHECKS **********                     -->
+    <!-- *************************************************************** -->
 
-
-	<!-- *************************************************************** -->
-	<!--             ******** SVN STUFF **********                       -->
-	<!-- *************************************************************** -->
-
-	<property name="svn.base.url" value="${svn.repository.url}/${svn.project.base.path}"/>
 
 	<target name="check-abc">
 		<available file="build.properties" property="abc.present"/>
+        <echo message="build properties exists ..." level="info"/>
 	</target>
 
 	<target name="do-if-abc" depends="check-abc" if="abc.present">
 		<property file="deploy.properties"></property>
+        <echo message="deploy properties exists ..." level="info"/>
 	</target>
 
 
+    <!-- *************************************************************** -->
+    <!--             ******** SVN STUFF **********                       -->
+    <!-- *************************************************************** -->
+
+    <property name="svn.base.url" value="${svn.repository.url}/${plugin.name}"/>
 
 
 
@@ -341,14 +348,15 @@
 	<!-- ******************************************************************* -->
 
 	<target name="svnCommit" depends="do-if-abc">
-
+             <echo message="ant home is ${ant.home}"/>
+        <echo message="ant core lib is ${ant.core.lib}"/>
 		<java classname="org.tmatesoft.svn.cli.SVN"
 					dir="${build.dir}" fork="true">
 			<arg value="commit"/>
 			<arg value="--username"/>
 			<arg value="${svn.username}"/>
 			<arg value="-m"/>
-			<arg value='"Testing"'/>
+			<arg value='"Testing from ANT"'/>
 			<arg value="${svn.base.url}"/>
 			<classpath>
 				<fileset dir="${ant.home}/lib">
@@ -363,9 +371,9 @@
 	<!--         build.properties and uses SVNANT tasks                              -->
 	<!-- ******************************************************************* -->
 	<target name="svntag" description="tags individual project using svnant task" depends="do-if-abc">
-		<property name="svn.tag.message" value="Tagging Project ${ant.project.name} with tag name ${tag.name} from trunk "/>
+		<property name="svn.tag.message" value="Tagging Project ${ant.project.name} with tag name ${plugin.stable} from trunk "/>
 		<property name="src.url"  value="${svn.base.url}/trunk/"/>
-		<property name="dest.url" value="${svn.base.url}/tags/${tag.name}"/>
+		<property name="dest.url" value="${svn.base.url}/tags/${plugin.stable}"/>
 		<record name="logfile.txt" action="start" append="true" />
 		<echo message="${svn.tag.message}"/>
 		<echo message="${src.url}"/>
