@@ -1,14 +1,14 @@
 <?php 
 
-function my_admin_add_help_tab () {
-    global $isotope_admin;
+function damien_dbc_admin_add_help_tab () {
+    global $dbc_backup_admin;
     $screen = get_current_screen();
-
+    //echo $screen->id;
     /*
      * Check if current screen is My Admin Page
      * Don't add help tab if it's not
      */
-    if ( $screen->id != $isotope_admin )
+    if ( $screen->id != $dbc_backup_admin )
         return;
 
     // Add my_help_tab if current screen is My Admin Page
