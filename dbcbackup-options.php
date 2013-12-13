@@ -166,7 +166,7 @@ require_once ('inc/admin-functions.php');
 					<?php endfor; ?>
 					</select></label>&nbsp;
 					<?php endforeach;?></p>
-				<?php _e('Active:', 'dbcbackup'); ?> <input style="display:inline" type="checkbox" name="active" value="1" <?php echo ($cfg['active'] ? 'checked="checked"' : ''); ?> /></p>		
+				<?php _e('Active:', 'dbcbackup'); ?> <input type="checkbox" name="active" value="1" <?php echo ($cfg['active'] ? 'checked="checked"' : ''); ?> /></p>
 				<?php if($next_scheduled = wp_next_scheduled('dbc_backup')):
 						_e('Next Schedule is on: ', 'dbcbackup');  echo date('Y-m-d H:i:s', $next_scheduled); ?> | <?php
 					endif;
