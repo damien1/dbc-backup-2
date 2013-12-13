@@ -23,6 +23,8 @@ $plugin = plugin_basename(__FILE__);
 global $damien_dbc_option;
 global $plugin;
 
+// @todo implement this default location and make it work for 1st time users.
+define ("DBCBACKUP2_LOCATION", "../wp-content/backup");
 
 /**
  * Gets the stored presets from the database so we can use them in the Admin page
@@ -49,7 +51,7 @@ function damien_dbc_set_default_options() {
 		$new_options['active'] = 0;
 		$new_options['rotate'] =-1;
 		$new_options['version'] = DBCBACKUP2_VERSION;
-		$new_options['export_dir'] = "../wp-content/backup";
+		$new_options['export_dir'] = "";
 		add_option('dbcbackup_options', $new_options);
 	}
 }
