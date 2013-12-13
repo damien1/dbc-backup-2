@@ -110,9 +110,9 @@ elseif   ($dbc_cnt == 'dbc_backupnow')
 }
 
 
-
+//
 // here we go make directories
-// @todo need to make this run when the plugin is installed.
+//
 $is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
 if(!empty($cfg['export_dir']))
 {
@@ -128,7 +128,7 @@ if(!empty($cfg['export_dir']))
 		 * ------------------------------------------------------------------------ */
 
 
-
+         // @TODO change this if clause as it doesnt work for first time users.
 		if(is_dir($cfg['export_dir']))
 		{
 			$dbc_msg[] = sprintf(__("Backup Folder <strong>%s</strong> was created.", 'dbcbackup'), $cfg['export_dir']);
