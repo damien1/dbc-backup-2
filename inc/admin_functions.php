@@ -13,7 +13,7 @@
 
 //variables we will use
 $temp='';
-$dbc_cnt='';
+$dbc_cnt='';   // takes the $_POST variables
 $clear='';
 $schedule='';
 
