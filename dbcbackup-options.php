@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 if(!defined('WP_ADMIN') OR !current_user_can('manage_options')) wp_die(__('You do not have sufficient permissions to access this page.'));
 
 //admin page functions
-require_once ('inc/admin-functions.php');
+require_once ('inc/admin_functions.php');
 
 
 

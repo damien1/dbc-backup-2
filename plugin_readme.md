@@ -22,7 +22,9 @@ You select when and where your backup will be generated. The backup file is save
 * Manual backup - anytime you want to save a backup before updating WordPress or installing a plugin you can.
 
 = Additional Info =
-The plugin will try to auto create the export directory
+The plugin will try to auto create the export directory.
+
+This plugin creates it's own sql file and does not use mysqldump like most other plugins.
 
 During backup, a log is created that includes, the generation date, file, filesize, status and the duration of the generation.
 
@@ -43,7 +45,33 @@ DBC Backup was built to be fast, flexible and as simple as possible.
 
 == Changelog ==
 
-= Version @BUILD@ =
+= Version 2.3 =
+- Major update, new layout
+- FIXED - issue with SQL file that prevented it from being imported
+- FIXED - a lot of the PHP error notices which annoy many developers
+- FIXED - now use mysqli.query as mysql_query is deprecated
+
+= Version 2.2 =
+- Killed a few bugs. Getting this ready for the next WordPress 3.6
+
+= Version 2.1.1 =
+- Making things a little bit harder. Added an index.php file so you can't browse this plugin folder.
+
+= Version 2.1 =
+- New Admin Panel layout
+- Moved DBC backup from top-level menu to under Tools (where it should be)
+- Cleaned up the scheduling buttons to make it easier to use
+- FIXED - uninstall wasn't deleting user options saved in the database.
+
+= Version 2.0 =
+- Submitted as 'fork' of the existing plugin
+- Tested and confirmed working on WordPress 3.4.1
+
+= Version 1.1 =
+- Added option to specify the interval between crons. e.g 1 hour, 2 days, 3 weeks, 4 months etc etc
+- Added option to remove older than x days backups after a new backup generation
+
+= Version 1.0 =
 - First Initial Release
 
 == Installation ==
