@@ -90,9 +90,20 @@
 	</target>
 
 
+     <target name="svn_copy">
+         <copy todir="${dist.dir}/${plugin.name}/trunk" overwrite="true">
+             <fileset dir="${build.dir}/${plugin.name}"/>
+         </copy>
+     </target>
 
-
-
+    <target name="svn_sync">
+       <sync todir="${dist.dir}/${plugin.name}/trunk">
+           <fileset dir="${build.dir}/${plugin.name}"/>
+           <preserveintarget>
+               <include name="**/.svn/**"/>
+           </preserveintarget>
+       </sync>
+    </target>
 
 
 
@@ -341,6 +352,31 @@
 
 
 
+    <!-- *************************************************************** -->
+    <!--             ******** SVN Checkout **********                       -->
+    <!-- *************************************************************** -->
+
+
+
+
+    <target name="svnCheckout" depends="makedir" description="svnCheckout from WordPress">
+
+
+        <java classname="org.tmatesoft.svn.cli.SVN"
+              dir="${dist.dir}" fork="true">
+            <arg value="co"/>
+
+            <arg value="http://${svn.base.url}"/>
+            <classpath>
+                <fileset dir="${ant.home}/lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </java>
+    </target>
+
+
+
 
 	<!-- ****************************************************************** -->
 	<!-- svnCommit:                                                          -->
@@ -348,15 +384,16 @@
 	<!-- ******************************************************************* -->
 
 	<target name="svnCommit" depends="do-if-abc">
-             <echo message="ant home is ${ant.home}"/>
+        <record name="logfile.txt" action="start" append="true" />
+        <echo message="ant home is ${ant.home}"/>
         <echo message="ant core lib is ${ant.core.lib}"/>
 		<java classname="org.tmatesoft.svn.cli.SVN"
-					dir="${build.dir}" fork="true">
+					dir="${dist.dir}/${plugin.name}/trunk" fork="true" failonerror="true">
 			<arg value="commit"/>
 			<arg value="--username"/>
 			<arg value="${svn.username}"/>
 			<arg value="-m"/>
-			<arg value='"Testing from ANT"'/>
+			<arg value='"svnCommit from ANT"'/>
 			<arg value="${svn.base.url}"/>
 			<classpath>
 				<fileset dir="${ant.home}/lib">
@@ -364,6 +401,7 @@
 				</fileset>
 			</classpath>
 		</java>
+        <record name="logfile.txt" action="stop"/>
 	</target>
 
 	<!-- ****************************************************************** -->
