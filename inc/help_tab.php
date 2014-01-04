@@ -57,7 +57,7 @@ $screen->add_help_tab( array(
     
     
     
-    $screen->set_help_sidebar( '<p>' .'Related Content'. '</p> <p>Thanks for Going Pro with version' . ISOTOPEVERSION .
+    $screen->set_help_sidebar( '<p>' .'Related Content'. '</p> <p>Thanks for using my plugin ' . DBCBACKUP2_VERSION .
 					'<ul><li><a target="_blank" href="http://wordpress.damien.co/isotope/?utm_source=WordPress&utm_medium=isotope-pro-installed&utm_content=help&utm_campaign=Isotope-Layouts">Help & FAQs</a></li>
 					<li><a target="_blank" href="http://wordpress.damien.co/?utm_source=WordPress&utm_medium=isotope-pro-installed&utm_content=help&utm_campaign=Isotope-Layouts">More WordPress Tips & Ideas</a></li>
 					</ul>'
