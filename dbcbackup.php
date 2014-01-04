@@ -128,11 +128,12 @@ add_filter('cron_schedules', 'dbcbackup_interval');
 /**
  * Add settings link on Installed Plugin page
  * since v2.1
+ * changes v2.3.25 updated the settings link
  * @param $links
  * @return mixed
  */
 function dbc_backup_settings_link($links) {
-  $settings_link = '<a href="tools.php?page=dbc-backup-2/dbcbackup-options.php">Settings</a>'; 
+  $settings_link = '<a href="tools.php?page=dbc_backup_admin">Settings</a>';
   array_unshift($links, $settings_link); 
   return $links; 
 }
