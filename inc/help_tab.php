@@ -13,14 +13,14 @@ function damien_dbc_admin_add_help_tab () {
 
     // Add my_help_tab if current screen is My Admin Page
     $screen->add_help_tab( array(
-    'id'      => 'vpl-start',
-    'title'   => __('Getting Started', 'vpl'),
+    'id'      => 'dbc-start',
+    'title'   => __('Getting Started', 'dbc'),
     'content' => '<ol>
-					<li>Add a <a target="_blank" href="post-new.php?post_type=page">new Page</a></li>
-					<li>Add the shortcode [dbc_isotope]</li>
-					<li>Remember to give your page a name</li>
-					<li>Publish the page</li>
-					<li>View your page with Isotope</li>
+					<li>Set your backup directory ideally to ../wp-content/backup or something harder.</li>
+					<li>Set compression level to help save space</li>
+					<li>Set how often the backup will run and when</li>
+					<li>Select ACTIVE</li>
+					<li>Click on Save Changes</li>
 					</ol>',
 ));
  
@@ -32,7 +32,7 @@ $screen->add_help_tab( array(
 ));
 */
  
-$screen->add_help_tab( array(
+/*$screen->add_help_tab( array(
     'id'      => 'paging',
     'title'   => __('Paging', 'vpl'),
     'content' => '<p>Paging is cool - but taxing</p><ol>
@@ -53,13 +53,13 @@ $screen->add_help_tab( array(
 				<li> [dbc_isotope order=DESC] defaults to most recent posts first but you can change this to ASC to go with oldest.</li>
 
 						</ul>' ) . '</p>',
-    ) );
+    ) );                                  */
     
     
     
     $screen->set_help_sidebar( '<p>' .'Related Content'. '</p> <p>Thanks for using my plugin ' . DBCBACKUP2_VERSION .
-					'<ul><li><a target="_blank" href="http://wordpress.damien.co/isotope/?utm_source=WordPress&utm_medium=isotope-pro-installed&utm_content=help&utm_campaign=Isotope-Layouts">Help & FAQs</a></li>
-					<li><a target="_blank" href="http://wordpress.damien.co/?utm_source=WordPress&utm_medium=isotope-pro-installed&utm_content=help&utm_campaign=Isotope-Layouts">More WordPress Tips & Ideas</a></li>
+					'<ul><li><a target="_blank" href="http://wordpress.damien.co/?s=dbc-backup-2/?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_content=help&utm_campaign=dbc-backup">Help & FAQs</a></li>
+					<li><a target="_blank" href="http://wordpress.damien.co/?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_content=help&utm_campaign=dbc-backup">More WordPress Tips & Ideas</a></li>
 					</ul>'
     
     );
