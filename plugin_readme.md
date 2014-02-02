@@ -50,6 +50,8 @@ DBC Backup was built to be fast, flexible and as simple as possible.
 - FIXED - issue with SQL file that prevented it from being imported
 - FIXED - a lot of the PHP error notices which annoy many developers
 - FIXED - now use mysqli.query as mysql_query is deprecated
+- FIXED - since 2.3.25 issue with plugin settings
+- NEW - since 2.3.25 plugin help pulldown menu added
 
 = Version 2.2 =
 - Killed a few bugs. Getting this ready for the next WordPress 3.6
