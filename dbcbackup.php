@@ -13,12 +13,24 @@ License: GPLv2 or later
  * You shouldn't be here.
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 /**
  * Globals
  */
-define ("DBCBACKUP2_VERSION", "@THISBUILD@");
-define ("PLUGIN_NAME", "@PLUGINNAME@");
+
+// Define application environment
+defined('APPLICATION_ENV')
+|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?
+    getenv('APPLICATION_ENV') :
+    'production'));
+//echo getenv('APPLICATION_ENV');
+
+if (APPLICATION_ENV == 'development') {
+    define ("DBCBACKUP2_VERSION", "100");
+    define ("PLUGIN_NAME", "@PLUGINNAME@");
+} else if (APPLICATION_ENV == 'production') {
+    define ("DBCBACKUP2_VERSION", "@THISBUILD@");
+    define ("PLUGIN_NAME", "@PLUGINNAME@");
+}
 $plugin = plugin_basename(__FILE__);
 global $damien_dbc_option;
 global $plugin;
@@ -58,6 +70,19 @@ function damien_dbc_set_default_options() {
 add_action('admin_init', 'damien_dbc_set_default_options');
 
 
+//PHP VERSION CHECK
+
+if (version_compare(PHP_VERSION, '5.0.0', '>=')) {
+    //echo 'I am using PHP 5, my version: ' . PHP_VERSION . "\n";
+    require_once ('inc/functions.php');
+}
+
+if (version_compare(PHP_VERSION, '5.0.0', '<')) {
+    echo 'I am using PHP 4, my version: ' . PHP_VERSION . "\n";
+    require_once ('inc/php4_functions.php');
+}
+
+
 
 
 
@@ -71,7 +96,7 @@ require_once ('inc/backup_run.php');
 //functions for the admin page are called at the top of the options.php
 //require_once ('inc/admin-functions.php');
 //functions
-require_once ('inc/functions.php');
+
 
 
 
