@@ -1,18 +1,21 @@
 <?php
 
 /**
+ * this file is for people using PHP5.0 and not enabled the mysqli PHP module
+ *
  * @param $table
  * @param $fp
- *
  * @return bool
- */function dbcbackup_structure($table, $fp)
+ */
+function dbcbackup_structure($table, $fp)
 {	
 	$is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
 	if (!$is_safe_mode) set_time_limit(600);
 	$res ='';
 	$res .= "\n";
-	$res .= "# Table structure of table ".dbcbackup_backquote($table)."\n";
-	$res .= "# ------------------------------------------------------- \n";
+	$res .= "--\n";
+	$res .= "-- Table structure of table ".dbcbackup_backquote($table)."\n";
+	$res .= "--\n";
 	$res .= "\n";
 
 	if($sql = mysql_query("SHOW CREATE TABLE ".dbcbackup_backquote($table)))
@@ -22,14 +25,13 @@
 		$create_table = $row[1];
 		unset($row);
 		$create_table = preg_replace('/^CREATE TABLE/', 'CREATE TABLE IF NOT EXISTS', $create_table);
-		//@todo delete the next line if this works
-		//$create_table = preg_replace("/ENGINE\s?=/", "TYPE=", $create_table);
+		$create_table = preg_replace("/ENGINE\s?=/", "TYPE=", $create_table);
 		$create_table .= ";\n";
 		$res .= $create_table;
 		mysql_free_result($sql);
 		$status = true;
 	}
-	else
+	else 
 	{
 		$tmp = mysql_error();
 		$res .= "--".$tmp;
@@ -42,21 +44,18 @@
 
 /* ------------------ */
 
-/**
- * @param $table
- * @param $fp
- * @return bool
- */function dbcbackup_data($table, $fp)
+function dbcbackup_data($table, $fp)
 {
 	$is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
 	if (!$is_safe_mode) set_time_limit(600);
 	$res ='';
 	$res .= "\n";
-	$res .= "# Dumping data for table ".dbcbackup_backquote($table)."\n";
-	$res .= "# ----------------------------------------------------- \n";
+	$res .= "--\n";
+	$res .= "-- Dumping data for table ".dbcbackup_backquote($table)."\n";
+	$res .= "--\n";
 	$res .= "\n";
 	dbcbackup_write($fp, $res);
-
+		
 	if($sql = mysql_query("SELECT * FROM ".dbcbackup_backquote($table)))
 	{
 		list($numfields, $fields_meta) = dbcbackup_fields($sql);
@@ -67,14 +66,11 @@
 		$replace      = array('\0', '\n', '\r', '\Z');
 		while ($row = mysql_fetch_array($sql))
 		{
-			$res = "INSERT INTO ".dbcbackup_backquote($table)." VALUES (";
+			$res = "INSERT INTO ".dbcbackup_backquote($table)." VALUES (";	
 			$fieldcounter = -1;
 			$firstfield = 1;
 			while (++$fieldcounter < $numfields)
-			{
-				//tmp array and array dereferencing here
-				$fields_tmp = array(1,2,3);
-
+			{	
 				if (!$firstfield){
 					$res .= ', ';
 				}else{
@@ -85,7 +81,7 @@
                 } elseif ($fields_meta[$fieldcounter]->numeric && $fields_meta[$fieldcounter]->type != 'timestamp'
                         && ! $fields_meta[$fieldcounter]->blob) {
                     $res .= $row[$fieldcounter];
-                } elseif (stristr($fields_tmp[1], 'BINARY')
+                } elseif (stristr($field_flags[$j], 'BINARY')
                         && isset($GLOBALS['hexforbinary'])
                         && $fields_meta[$fieldcounter]->type != 'datetime'
                         && $fields_meta[$fieldcounter]->type != 'date'
@@ -103,8 +99,8 @@
                     $res .= "'".str_replace($search, $replace, dbcbackup_addslashes($row["$fieldcounter"]))."'";
                 } // end if
 			}
-			$res .= ");\n";
-			dbcbackup_write($fp, $res);
+			$res .= ");\n";	
+			dbcbackup_write($fp, $res);	
 		}
 		//$res = "UNLOCK TABLES;\n";
 		$res = '';
@@ -122,30 +118,27 @@
 }
 
 
-/**
- * @param $a_name
- * @return array|string
- */function dbcbackup_backquote($a_name)
+function dbcbackup_backquote($a_name)
 {
 	//Add backqouotes to tables and db-names in SQL queries. Taken from phpMyAdmin.
-	if (!empty($a_name) && $a_name != '*')
+	if (!empty($a_name) && $a_name != '*') 
 	{
-        if (is_array($a_name))
+        if (is_array($a_name)) 
 		{
 			$result = array();
 			reset($a_name);
-			while(list($key, $val) = each($a_name))
+			while(list($key, $val) = each($a_name)) 
 			{
 			  $result[$key] = '`' . $val . '`';
 			}
 			 return $result;
-        }
-		else
+        } 
+		else 
 		{
 			return '`' . $a_name . '`';
         }
-    }
-	else
+    } 
+	else 
 	{
         return $a_name;
     }
@@ -153,37 +146,25 @@
 
 /* ------------------ */
 
-/**
- * This is the header of the SQL file
- * @return string
- */
 function dbcbackup_header()
 {
-	//@todo tidy this up
-	$link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
-	$header = "# ####################################################### \n";
-	$header .= "#  \n";
-	$header .= "# DBC Backup 2\n";
-	$header .= "# Version 2.3 for Wordpress 3.6 \n";
-	$header .= "# Plugin by Damien Saunders http://wordpress.damien.co \n";
-	$header .= "# Generated: ".date('l dS \of F Y h:i A', time() + (get_option('gmt_offset') * 3600))." \n";
-	$header .= "# MySQL Server: ".mysqli_get_host_info($link)."\n";
-	$header .= "# MySQL Server version: ".mysqli_get_server_info($link)."\n";
-	$header .= "# Database: ".dbcbackup_backquote(DB_NAME)."\n";
-	$header .= "#  \n";
-	$header .= "# ####################################################### \n";
+	$header  = "-- Database Cron Backup \n";
+	$header .= "-- Version 2.0 for Wordpress 2.5+ \n";
+	$header .= "-- Copyright Damien Saunders www.damien.co \n";
+	$header .= "-- Generated: ".date('l dS \of F Y h:i A', time() + (get_option('gmt_offset') * 3600))." \n";
+	$header .= "-- MySQL Server: ".mysql_get_host_info()."\n";
+	$header .= "-- MySQL Server version: ".mysql_get_server_info()."\n";
+	$header .= "-- Database: ".dbcbackup_backquote(DB_NAME)."\n";
+	$header .= "-- -------------------------------------------------------- \n";
 	return $header;
 }
 
 /* ------------------ */
 
-/**
- * @param $result
- * @return array
- */function dbcbackup_fields($result) {
+function dbcbackup_fields($result) {
     $fields       = 	array();
     $num_fields   = 	mysql_num_fields($result);
-    for ($i = 0; $i < $num_fields; $i++)
+    for ($i = 0; $i < $num_fields; $i++) 
 	{
         $fields[] = mysql_fetch_field($result, $i);
     }
@@ -192,13 +173,7 @@ function dbcbackup_header()
 
 /* ------------------ */
 
-/**
- * @param string $a_string
- * @param bool   $is_like
- * @param bool   $crlf
- * @param bool   $php_code
- * @return mixed
- */function dbcbackup_addslashes($a_string = '', $is_like = false, $crlf = false, $php_code = false)
+function dbcbackup_addslashes($a_string = '', $is_like = false, $crlf = false, $php_code = false)
 {	//Taken from phpMyAdmin.
 	if ($is_like) {
 		$a_string = str_replace('\\', '\\\\\\\\', $a_string);
@@ -220,12 +195,6 @@ function dbcbackup_header()
 
 /* ------------------ */
 
-/**
- * PHP file write and compression settings
- * @param        $fp
- * @param string $mode
- * @return array
- */
 function dbcbackup_open($fp, $mode='write')
 {
 	switch(DBC_COMPRESSION)
@@ -256,10 +225,7 @@ function dbcbackup_open($fp, $mode='write')
 
 /* ------------------ */
 
-/**
- * @param $fp
- * @return string
- */function dbcbackup_read($fp)
+function dbcbackup_read($fp)
 {
 	switch(DBC_COMPRESSION)
 	{
@@ -280,10 +246,7 @@ function dbcbackup_open($fp, $mode='write')
 
 /* ------------------ */
 
-/**
- * @param $fp
- * @param $code
- */function dbcbackup_write($fp, $code)
+function dbcbackup_write($fp, $code)
 {	
 	switch(DBC_COMPRESSION)
 	{
@@ -304,9 +267,7 @@ function dbcbackup_open($fp, $mode='write')
 
 /* ------------------ */
 
-/**
- * @param $fp
- */function dbcbackup_close($fp)
+function dbcbackup_close($fp)
 {
 	switch(DBC_COMPRESSION)
 	{
@@ -327,11 +288,7 @@ function dbcbackup_open($fp, $mode='write')
 
 /* ------------------ */
 
-/**
- * @param $cfg
- * @param $timenow
- * @return int
- */function dbcbackup_rotate($cfg, $timenow)
+function dbcbackup_rotate($cfg, $timenow)
 {
 	$removed = 0;
 	if($cfg['rotate'] >= 0)
@@ -364,3 +321,5 @@ function dbcbackup_open($fp, $mode='write')
 	}
 	return $removed;
 }
+
+?>
