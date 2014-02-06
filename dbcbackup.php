@@ -82,23 +82,20 @@ add_action('admin_init', 'damien_dbc_set_default_options');
 // PHP 5.0 introduced mysqli module
 // but it was not enabled by default til PHP 5.3
 if (version_compare(PHP_VERSION, '5.3.0', '<')) {
-    echo 'I am using Old PHP, my version: ' . PHP_VERSION . "\n";
+   // echo 'I am using Old PHP, my version: ' . PHP_VERSION . "\n";
     error_log("WordPress requires at least 5.2.4. PHP mysqli is default enabled from 5.4.x", 0);
     require_once('inc/mysql_functions.php');
 
 }  elseif (version_compare(PHP_VERSION, '5.3.0') >= 0) {
-    echo 'I am at least PHP version 5.3.0, my version: ' . PHP_VERSION . "\n";
+    //echo 'I am at least PHP version 5.3.0, my version: ' . PHP_VERSION . "\n";
     require_once ('inc/functions.php');
 }
-
-
-
 
 // backup files
 require_once ('inc/backup_run.php');
 
 //functions for the admin page are called at the top of the options.php
-//require_once ('inc/admin-functions.php');
+//include ('inc/admin_functions.php');
 
 
 
