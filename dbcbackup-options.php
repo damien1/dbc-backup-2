@@ -36,7 +36,13 @@ require_once ('inc/admin_functions.php');
 			<div class="postbox">
 				<h3><span>Backup Settings Status</span></h3>
 				<div class="inside">
-					<?php echo implode('<br />', $dbc_msg); ?>
+					<?php
+                    echo 'Current PHP version: ' . phpversion().'<br />';
+
+                    if (version_compare(PHP_VERSION, '5.0.0', '<')) {
+                        echo 'I am using PHP 4, my version: ' . PHP_VERSION . "\n";
+                    }
+                    echo implode('<br />', $dbc_msg); ?>
 					</div>
 				</div>
 						<div class="postbox">

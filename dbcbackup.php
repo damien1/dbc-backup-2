@@ -16,6 +16,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Globals
  */
+$plugin = plugin_basename(__FILE__);
+global $damien_dbc_option;
+global $plugin;
+
+// @todo implement this default location and make it work for 1st time users.
+define ("DBCBACKUP2_LOCATION", "../wp-content/backup");
 
 // Define application environment
 defined('APPLICATION_ENV')
@@ -24,19 +30,14 @@ defined('APPLICATION_ENV')
     'production'));
 //echo getenv('APPLICATION_ENV');
 
-if (APPLICATION_ENV == 'development') {
+if ( 'development'== APPLICATION_ENV) {
     define ("DBCBACKUP2_VERSION", "100");
     define ("PLUGIN_NAME", "@PLUGINNAME@");
-} else if (APPLICATION_ENV == 'production') {
+    //echo APPLICATION_ENV;
+} elseif ( 'production'== APPLICATION_ENV) {
     define ("DBCBACKUP2_VERSION", "@THISBUILD@");
     define ("PLUGIN_NAME", "@PLUGINNAME@");
 }
-$plugin = plugin_basename(__FILE__);
-global $damien_dbc_option;
-global $plugin;
-
-// @todo implement this default location and make it work for 1st time users.
-define ("DBCBACKUP2_LOCATION", "../wp-content/backup");
 
 /**
  * Gets the stored presets from the database so we can use them in the Admin page
@@ -70,20 +71,6 @@ function damien_dbc_set_default_options() {
 add_action('admin_init', 'damien_dbc_set_default_options');
 
 
-//PHP VERSION CHECK
-
-if (version_compare(PHP_VERSION, '5.0.0', '>=')) {
-    //echo 'I am using PHP 5, my version: ' . PHP_VERSION . "\n";
-    require_once ('inc/functions.php');
-}
-
-if (version_compare(PHP_VERSION, '5.0.0', '<')) {
-    echo 'I am using PHP 4, my version: ' . PHP_VERSION . "\n";
-    require_once ('inc/php4_functions.php');
-}
-
-
-
 
 
 /**
@@ -91,12 +78,27 @@ if (version_compare(PHP_VERSION, '5.0.0', '<')) {
  * since v2.3
  * @return array|bool
  */
+
+// PHP 5.0 introduced mysqli module
+// but it was not enabled by default til PHP 5.3
+if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+    echo 'I am using Old PHP, my version: ' . PHP_VERSION . "\n";
+    error_log("WordPress requires at least 5.2.4. PHP mysqli is default enabled from 5.4.x", 0);
+    require_once('inc/mysql_functions.php');
+
+}  elseif (version_compare(PHP_VERSION, '5.3.0') >= 0) {
+    echo 'I am at least PHP version 5.3.0, my version: ' . PHP_VERSION . "\n";
+    require_once ('inc/functions.php');
+}
+
+
+
+
 // backup files
 require_once ('inc/backup_run.php');
+
 //functions for the admin page are called at the top of the options.php
 //require_once ('inc/admin-functions.php');
-//functions
-
 
 
 
