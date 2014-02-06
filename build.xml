@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="***" basedir=".">
+<project name="dbc-backup-2" basedir=".">
 
 	<!-- Include config file containing  -->
 	<loadproperties srcFile="build.properties" />
@@ -223,7 +223,7 @@
 				 basedir="/${build.dir}"
 				/>
 		<echo message="storing a copy in DropBox ..." level="info"/>
-		<zip destfile="/Volumes/Proust/dropbox/_plugins/${plugin.name}-${build.version}.${build.number}.zip"
+		<zip destfile="/Volumes/marcel/Users/damien/Dropbox/_plugins/${plugin.name}-${build.version}-${build.number}.zip"
 				 basedir="/${build.dir}"
 				/>
 	</target>
@@ -242,7 +242,7 @@
 	<!--   FTP FTP FTP FTP FTP FTP                                       -->
 	<!-- *************************************************************** -->
 
-	<target name="ftp.damien" description="FTP STUFF" depends="mac_zip">
+	<target name="ftp.damien" description="FTP STUFF">
 		<echo message="ftp mkdir if doesnt exist ..." />
 		<ftp action="mkdir"
 				 remotedir="${server.dir}/${plugin.name}"
