@@ -8,15 +8,17 @@
 
 function dbcbackup_run($mode = 'auto')
 {
+    $link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
 if(defined('DBC_BACKUP_RETURN')) return;
 $cfg = get_option('dbcbackup_options');
 if(!$cfg['active'] AND $mode == 'auto') return;
 if(empty($cfg['export_dir'])) return;
 if($mode == 'auto')	dbcbackup_locale();
 
-	require_once ('functions.php');
+//    @TODO FIX THIS LINE
+	require_once('dbc_backup_mysqli_functions.php');
 
-//require_once ('inc/functions.php');
+//require_once ('inc/dbc_backup_mysqli_functions.php');
 define('DBC_COMPRESSION', $cfg['compression']);
 define('DBC_GZIP_LVL', $cfg['gzip_lvl']);
 define('DBC_BACKUP_RETURN', true);
@@ -32,9 +34,9 @@ if($file)
 {
 $removed = dbcbackup_rotate($cfg, $timenow);
 @set_time_limit(0);
-$sql = mysql_query("SHOW TABLE STATUS FROM ".DB_NAME);
+$sql = mysqli_query($link, "SHOW TABLE STATUS FROM ".DB_NAME);
 dbcbackup_write($file, dbcbackup_header());
-while ($row = mysql_fetch_array($sql))
+while ($row = mysqli_fetch_array($sql, MYSQLI_BOTH))
 {
 dbcbackup_structure($row['Name'], $file);
 dbcbackup_data($row['Name'], $file);

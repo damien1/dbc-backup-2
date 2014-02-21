@@ -7,7 +7,8 @@
  * @return bool
  */
  function dbcbackup_structure($table, $fp)
-{	
+{
+    $link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 	$is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
 	if (!$is_safe_mode) set_time_limit(600);
 	$res ='';
@@ -16,10 +17,10 @@
 	$res .= "# ------------------------------------------------------- \n";
 	$res .= "\n";
 
-	if($sql = mysql_query("SHOW CREATE TABLE ".dbcbackup_backquote($table)))
+	if($sql = mysqli_query($link, "SHOW CREATE TABLE ".dbcbackup_backquote($table)))
 	{
 		$res .= "DROP TABLE IF EXISTS ".dbcbackup_backquote($table).";\n";
-		$row = mysql_fetch_array($sql);
+		$row = mysqli_fetch_array($sql, MYSQLI_BOTH);
 		$create_table = $row[1];
 		unset($row);
 		$create_table = preg_replace('/^CREATE TABLE/', 'CREATE TABLE IF NOT EXISTS', $create_table);
@@ -27,12 +28,12 @@
 		//$create_table = preg_replace("/ENGINE\s?=/", "TYPE=", $create_table);
 		$create_table .= ";\n";
 		$res .= $create_table;
-		mysql_free_result($sql);
+		mysqli_free_result($sql);
 		$status = true;
 	}
 	else
 	{
-		$tmp = mysql_error();
+		$tmp = mysqli_error($link);
 		$res .= "--".$tmp;
 		$status = false;
 	}
@@ -49,6 +50,7 @@
  * @return bool
  */function dbcbackup_data($table, $fp)
 {
+    $link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 	$is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
 	if (!$is_safe_mode) set_time_limit(600);
 	$res ='';
@@ -58,7 +60,7 @@
 	$res .= "\n";
 	dbcbackup_write($fp, $res);
 
-	if($sql = mysql_query("SELECT * FROM ".dbcbackup_backquote($table)))
+	if($sql = mysqli_query($link, "SELECT * FROM ".dbcbackup_backquote($table)))
 	{
 		list($numfields, $fields_meta) = dbcbackup_fields($sql);
 		//$res = "LOCK TABLES ".dbcbackup_backquote($table)." WRITE;\n";
@@ -66,7 +68,7 @@
 		dbcbackup_write($fp, $res);
 		$search       = array("\x00", "\x0a", "\x0d", "\x1a"); //\x08\\x09, not required | Taken from phpMyAdmin.
 		$replace      = array('\0', '\n', '\r', '\Z');
-		while ($row = mysql_fetch_array($sql))
+		while ($row = mysqli_fetch_array($sql, MYSQLI_BOTH))
 		{
 			$res = "INSERT INTO ".dbcbackup_backquote($table)." VALUES (";
 			$fieldcounter = -1;
@@ -109,12 +111,12 @@
 		}
 		//$res = "UNLOCK TABLES;\n";
 		$res = '';
-		mysql_free_result($sql);
+		mysqli_free_result($sql);
 		$status = true;
 	}
 	else
 	{
-		$tmp = mysql_error();
+		$tmp = mysqli_error($link);
 		$res .= "--".$tmp;
 		$status = false;
 	}
@@ -183,10 +185,10 @@ function dbcbackup_header()
  * @return array
  */function dbcbackup_fields($result) {
     $fields       = 	array();
-    $num_fields   = 	mysql_num_fields($result);
+    $num_fields   = 	mysqli_num_fields($result);
     for ($i = 0; $i < $num_fields; $i++)
 	{
-        $fields[] = mysql_fetch_field($result, $i);
+        $fields[] = mysqli_fetch_field($result, $i);
     }
     return (array($num_fields, $fields));
 }
