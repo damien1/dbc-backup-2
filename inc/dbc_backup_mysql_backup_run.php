@@ -14,10 +14,7 @@ if(!$cfg['active'] AND $mode == 'auto') return;
 if(empty($cfg['export_dir'])) return;
 if($mode == 'auto')	dbcbackup_locale();
 
-	require_once ('functions.php');
-
-//require_once ('inc/functions.php');
-define('DBC_COMPRESSION', $cfg['compression']);
+    define('DBC_COMPRESSION', $cfg['compression']);
 define('DBC_GZIP_LVL', $cfg['gzip_lvl']);
 define('DBC_BACKUP_RETURN', true);
 
