@@ -22,15 +22,15 @@ You select when and where your backup will be generated. The backup file is save
 * Manual backup - anytime you want to save a backup before updating WordPress or installing a plugin you can.
 
 = Additional Info =
-The plugin will try to auto create the export directory.
-
 This plugin creates it's own sql file and does not use mysqldump like most other plugins.
 
 During backup, a log is created that includes, the generation date, file, filesize, status and the duration of the generation.
 
-The backup files are identical to what phpmyadmin would produce because DBC Backup is using the key procedures of phpmyadmin. 
+The backup sql export files can be imported with phpmyadmin or apps like Sequel Pro.
 
-DBC Backup was built to be fast, flexible and as simple as possible.
+DBC Backup was built to be fast, flexible and as simple as possible. That's why there are no built-in export options.
+
+This plugin doesn't require your server to have mysqldump
 
 
 = Checkout my other work =
@@ -48,9 +48,12 @@ DBC Backup was built to be fast, flexible and as simple as possible.
 This build @THISBUILD@
 
 = Version 2.4 =
-- WARNING - MYSQL connector deprecated since 5.0   mysqli connector used instead
+- WARNING - MYSQL connector deprecated since PHP 5.5.0 mysqli connector used instead
 - Regression fix for those people whose server uses MYSQL v5 but not enable mysqli
-- WARNING PHP 5.x and MYSQL 5.3 minimum for WordPress
+- WARNING PHP 5.x and MYSQL 5.2.4 minimum for WordPress
+- So .. what's new ?? re-written this plugin to use mysqli connector
+- Updated - protection for your backup folder. If you've switched from any other backup plugin, you can use the same directory
+- Updated - error messages so you know what's protected or if wp-cron didn't run
 
 
 = Version 2.3 =
