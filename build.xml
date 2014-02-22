@@ -89,6 +89,13 @@
 		<delete dir="${dist.dir}" />
 	</target>
 
+    <target name="mac_old">
+        <copy todir="/Volumes/marcel/Users/damien/mamp/wordpress/wp-content/plugins/${plugin.name}" overwrite="true">
+            <fileset dir="${build.dir}/${plugin.name}"/>
+        </copy>
+    </target>
+
+
 
      <target name="svn_copy">
          <copy todir="${dist.dir}/${plugin.name}/trunk" overwrite="true">
