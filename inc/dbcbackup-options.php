@@ -1,14 +1,14 @@
 <?php
 /*
-Plugin Options for DBC Backup 2
+ * Plugin Options for DBC Backup 2
+ *
+ */
 
-*/
-
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'WPINC' ) ) exit;
 if(!defined('WP_ADMIN') OR !current_user_can('manage_options')) wp_die(__('You do not have sufficient permissions to access this page.'));
 
 //admin page functions  ///
-require_once('inc/admin_functions.php');
+require_once('admin_functions.php');
 
 
 
@@ -102,8 +102,11 @@ require_once('inc/admin_functions.php');
 	   <tr valign="top">
 		   <th scope="row" nowrap="nowrap"><?php _e('Export Directory:', 'dbcbackup'); ?></th>
 		   <td><input size="40" type="text"  name="export_dir" value="<?php echo esc_attr($cfg['export_dir']); ?>" /><br />
-			<?php _e('Use ../wp-content/backup or a full path like e.g. /home/username/public_html/databack', 'dbcbackup'); ?></td>
-		</tr>
+			<?php _e('Use ../wp-content/backup or a full path like e.g. /home/username/public_html/databack', 'dbcbackup'); ?>
+
+           </td>
+
+       </tr>
 		<tr valign="top">
 		   <th scope="row" nowrap="nowrap"><?php _e('Compression:', 'dbcbackup'); ?></th>
 		   <td>
