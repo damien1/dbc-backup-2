@@ -152,7 +152,7 @@ function dbcbackup_header()
 	$header .= "-- Version 2.0 for Wordpress 2.5+ \n";
 	$header .= "-- Copyright Damien Saunders www.damien.co \n";
 	$header .= "-- Generated: ".date('l dS \of F Y h:i A', time() + (get_option('gmt_offset') * 3600))." \n";
-	$header .= "-- MySQL Server: ".mysql_get_host_info()."\n";
+	$header .= "-- MySQL Server: ".dbcbackup_backquote(DB_HOST)."\n";
 	$header .= "-- MySQL Server version: ".mysql_get_server_info()."\n";
 	$header .= "-- Database: ".dbcbackup_backquote(DB_NAME)."\n";
 	$header .= "-- -------------------------------------------------------- \n";
