@@ -29,11 +29,15 @@ if ( ! defined( 'WPINC' ) ) die;
 if (version_compare(PHP_VERSION, '5.3.0', '<')) {
     // echo 'I am using Old PHP, my version: ' . PHP_VERSION . "\n";
     error_log("WordPress requires at least 5.2.4. PHP mysqli is default enabled from 5.4.x", 0);
-    require_once('inc/dbc_backup_mysql_functions.php');
+    require_once ('inc/dbc_backup_mysql_functions.php');
+    // backup files
+    require_once ('inc/dbc_backup_mysql_backup_run.php');
 
 }  elseif (version_compare(PHP_VERSION, '5.3.0') >= 0) {
     //echo 'I am at least PHP version 5.3.0, my version: ' . PHP_VERSION . "\n";
     require_once('inc/dbc_backup_mysqli_functions.php');
+// backup files
+   require_once ('inc/backup_run.php');
 }
 
 // backup files
