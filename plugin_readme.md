@@ -47,6 +47,12 @@ DBC Backup was built to be fast, flexible and as simple as possible.
 
 This build @THISBUILD@
 
+= Version 2.4 =
+- WARNING - MYSQL connector deprecated since 5.0   mysqli connector used instead
+- Regression fix for those people whose server uses MYSQL v5 but not enable mysqli
+- WARNING PHP 5.x and MYSQL 5.3 minimum for WordPress
+
+
 = Version 2.3 =
 - Major update, new layout
 - FIXED - issue with SQL file that prevented it from being imported
