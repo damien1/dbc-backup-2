@@ -55,7 +55,7 @@ if ($dbc_cnt == 'dbc_logerase')
 	update_option('dbcbackup_options', $cfg);
 }
 
-elseif   ($dbc_cnt == 'dbc_backupnow')
+elseif   ('dbc_backupnow' == $dbc_cnt )
     //($_POST['quickdo'] == 'dbc_backupnow')
     {
         //if $dbc_cnt is quickdo then we do a backupnow
@@ -64,10 +64,10 @@ elseif   ($dbc_cnt == 'dbc_backupnow')
     }
 //elseif ($_POST['do'] == 'dbc_setup')
 
- elseif ($dbc_cnt == 'dbc_setup')
+ elseif ('dbc_setup' == $dbc_cnt)
     {
-        // echo "test";
-        //print_r($dbc_cnt);
+    // echo "test";
+    //print_r($dbc_cnt);
 	//we check the admin referrer
         // and setup the $temp values that we need
 
@@ -107,75 +107,166 @@ elseif   ($dbc_cnt == 'dbc_backupnow')
         ?>
 
         <div id="message" class="updated fade"><p><?php _e('Options saved.') ?></p></div><?php
-}
-
 
 //
 // here we go make directories
+// since v2.4 we dont overwrite the backup  folder if it already exists
 //
-$is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
-if(!empty($cfg['export_dir']))
-{
-	if(!is_dir($cfg['export_dir']) AND !$is_safe_mode)
-	{
-		@mkdir($cfg['export_dir'], 0777, true);
-		@chmod($cfg['export_dir'], 0777);
+     $is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
+     if(!empty($cfg['export_dir']))
+     {
+         if(!is_dir($cfg['export_dir']) AND !$is_safe_mode AND !file_exists($cfg['export_dir']))
+         {
+             @mkdir($cfg['export_dir'], 0777, true);
+             @chmod($cfg['export_dir'], 0777);
 
-		/* ------------------------------------------------------------------------ *
-		 * This is really important shit that shouldnt be in the admin page
-		 * since version 2.3 moved to this file
-		 * @todo move all the custom error messages to somewhere else
-		 * ------------------------------------------------------------------------ */
+             /* ------------------------------------------------------------------------ *
+              * This is really important shit that shouldn't be in the admin page
+              * since version 2.3 moved to this file
+              * @todo move all the custom error messages to somewhere else
+              * ------------------------------------------------------------------------ */
 
 
-         // @TODO change this if clause as it doesnt work for first time users.
-		if(is_dir($cfg['export_dir']))
-		{
-			$dbc_msg[] = sprintf(__("Backup Folder <strong>%s</strong> was created.", 'dbcbackup'), $cfg['export_dir']);
-		}
-		else
-		{
-			$dbc_msg[] = $is_safe_mode ? __('PHP Safe Mode Is On', 'dbcbackup') : sprintf(__("Folder <strong>%s</strong> wasn't created, check permissions.", 'dbcbackup'), $cfg['export_dir']);
-		}
-	}
-	else
-	{
-		$dbc_msg[] = sprintf(__("Backup Folder <strong>%s</strong> exists.", 'dbcbackup'), $cfg['export_dir']);
-	}
+             // @TODO change this if clause as it doesnt work for first time users.
+             if(is_dir($cfg['export_dir']))
+             {
+                 $dbc_msg[] = sprintf(__("Backup Folder <strong>%s</strong> was created.", 'dbcbackup'), $cfg['export_dir']);
+             }
+             else
+             {
+                 $dbc_msg[] = $is_safe_mode ? __('PHP Safe Mode Is On', 'dbcbackup') : sprintf(__("Folder <strong>%s</strong> wasn't created, check permissions.", 'dbcbackup'), $cfg['export_dir']);
+             }
+         }
+         else
+         {
+             $dbc_msg[] = sprintf(__("Backup Folder <strong>%s</strong> exists.", 'dbcbackup'), $cfg['export_dir']);
+         }
 
-	if(is_dir($cfg['export_dir']))
-	{
-		$condoms = array('.htaccess', 'index.html');
-		foreach($condoms as $condom)
-		{
-			if(!file_exists($cfg['export_dir'].'/'.$condom))
-			{
-				if($file = @fopen($cfg['export_dir'].'/'.$condom, 'w'))
-				{
-					$cofipr =  ($condom == 'index.html')? '' : "Order allow,deny\ndeny from all";
-					fwrite($file, $cofipr);
-					fclose($file);
-					$dbc_msg[] =  sprintf(__("File <strong>%s</strong> was created.", 'dbcbackup'), $condom);
-				}
-				else
-				{
-					$dbc_msg[] = sprintf(__("File <strong>%s</strong> wasn't created, check permissions.", 'dbcbackup'), $condom);
-				}
-			}
-			else
-			{
-				$dbc_msg[] = sprintf(__("<strong>%s</strong> protection exists.", 'dbcbackup'), $condom);
-			}
-		}
-	}
+         if(is_dir($cfg['export_dir']))
+         {
+             $condoms = array('.htaccess', 'index.html');
+             foreach($condoms as $condom)
+             {
+                 if(!file_exists($cfg['export_dir'].'/'.$condom))
+                 {
+                     if($file = @fopen($cfg['export_dir'].'/'.$condom, 'w'))
+                     {
+                         $cofipr =  ($condom == 'index.html')? '' : "Order allow,deny\ndeny from all";
+                         fwrite($file, $cofipr);
+                         fclose($file);
+                         $dbc_msg[] =  sprintf(__("File <strong>%s</strong> was created.", 'dbcbackup'), $condom);
+                     }
+                     else
+                     {
+                         $dbc_msg[] = sprintf(__("File <strong>%s</strong> wasn't created, check permissions.", 'dbcbackup'), $condom);
+                     }
+                 }
+                 else
+                 {
+                     $dbc_msg[] = sprintf(__("<strong>%s</strong> protection exists.", 'dbcbackup'), $condom);
+                 }
+             }
+         }
+     }
+     else
+     {
+         $dbc_msg[] = __('Specify the folder where the backups will be stored', 'dbcbackup');
+     }
+
+
 }
-else
-{
-	$dbc_msg[] = __('Specify the folder where the backups will be stored', 'dbcbackup');
+
+else {
+    //check the directory
+    if(is_dir($cfg['export_dir']))
+    {
+        $dbc_msg[] = sprintf(__("You're Backup Folder <strong>%s</strong> exists.", 'dbcbackup'), $cfg['export_dir']);
+    }
+
+    if(is_dir($cfg['export_dir']))
+    {
+        $condoms = array('.htaccess', 'index.html');
+        foreach($condoms as $condom)
+        {
+            if(file_exists($cfg['export_dir'].'/'.$condom))
+            {      $dbc_msg[] = sprintf(__("<strong>%s</strong> protection exists.", 'dbcbackup'), $condom);
+            }
+        }
+    }
+
 }
 
 
 
+
+ function dbc_backup_make_folders(){
+
+     //
+// here we go make directories
+// since v2.4 we dont overwrite the backup  folder if it already exists
+//
+     $is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
+     if(!empty($cfg['export_dir']))
+     {
+         if(!is_dir($cfg['export_dir']) AND !$is_safe_mode AND !file_exists($cfg['export_dir']))
+         {
+             @mkdir($cfg['export_dir'], 0777, true);
+             @chmod($cfg['export_dir'], 0777);
+
+             /* ------------------------------------------------------------------------ *
+              * This is really important shit that shouldn't be in the admin page
+              * since version 2.3 moved to this file
+              * @todo move all the custom error messages to somewhere else
+              * ------------------------------------------------------------------------ */
+
+
+             // @TODO change this if clause as it doesnt work for first time users.
+             if(is_dir($cfg['export_dir']))
+             {
+                 $dbc_msg[] = sprintf(__("Backup Folder <strong>%s</strong> was created.", 'dbcbackup'), $cfg['export_dir']);
+             }
+             else
+             {
+                 $dbc_msg[] = $is_safe_mode ? __('PHP Safe Mode Is On', 'dbcbackup') : sprintf(__("Folder <strong>%s</strong> wasn't created, check permissions.", 'dbcbackup'), $cfg['export_dir']);
+             }
+         }
+         else
+         {
+             $dbc_msg[] = sprintf(__("Backup Folder <strong>%s</strong> exists.", 'dbcbackup'), $cfg['export_dir']);
+         }
+
+         if(is_dir($cfg['export_dir']))
+         {
+             $condoms = array('.htaccess', 'index.html');
+             foreach($condoms as $condom)
+             {
+                 if(!file_exists($cfg['export_dir'].'/'.$condom))
+                 {
+                     if($file = @fopen($cfg['export_dir'].'/'.$condom, 'w'))
+                     {
+                         $cofipr =  ($condom == 'index.html')? '' : "Order allow,deny\ndeny from all";
+                         fwrite($file, $cofipr);
+                         fclose($file);
+                         $dbc_msg[] =  sprintf(__("File <strong>%s</strong> was created.", 'dbcbackup'), $condom);
+                     }
+                     else
+                     {
+                         $dbc_msg[] = sprintf(__("File <strong>%s</strong> wasn't created, check permissions.", 'dbcbackup'), $condom);
+                     }
+                 }
+                 else
+                 {
+                     $dbc_msg[] = sprintf(__("<strong>%s</strong> protection exists.", 'dbcbackup'), $condom);
+                 }
+             }
+         }
+     }
+     else
+     {
+         $dbc_msg[] = __('Specify the folder where the backups will be stored', 'dbcbackup');
+     }
+
+ }
 
 
 
