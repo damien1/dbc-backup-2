@@ -1,9 +1,13 @@
 <?php
 
 /**
-* @param string $mode
-*
-* @return array|bool
+ * This file gets called by the Run Now / Erase Logs dropdown
+ *
+ * since v 2.4 this file is only for mysqli
+ *
+ * @param string $mode
+ *
+ * @return array|bool
 */
 
 function dbcbackup_run($mode = 'auto')
@@ -15,10 +19,6 @@ if(!$cfg['active'] AND $mode == 'auto') return;
 if(empty($cfg['export_dir'])) return;
 if($mode == 'auto')	dbcbackup_locale();
 
-//    @TODO FIX THIS LINE
-	require_once('dbc_backup_mysqli_functions.php');
-
-//require_once ('inc/dbc_backup_mysqli_functions.php');
 define('DBC_COMPRESSION', $cfg['compression']);
 define('DBC_GZIP_LVL', $cfg['gzip_lvl']);
 define('DBC_BACKUP_RETURN', true);
@@ -46,7 +46,7 @@ $result = __('Successful', 'dbcbackup');
 }
 else
 {
-$result = sprintf(__("Failed To Open: %s.", 'dbcbackup'), $fp);
+$result = sprintf(__("Scheduled Backup Failed - probably cause wp-cron didn't start: %s.", 'dbcbackup'), $fp);
 }
 $mtime 			= 	explode(' ', microtime());
 $time_end 		= 	$mtime[1] + $mtime[0];

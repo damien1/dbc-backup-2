@@ -126,11 +126,12 @@
 
 
 /**
+ * Add back ticks to tables and db-names in SQL queries.
  * @param $a_name
  * @return array|string
- */function dbcbackup_backquote($a_name)
+ */
+function dbcbackup_backquote($a_name)
 {
-	//Add backqouotes to tables and db-names in SQL queries. Taken from phpMyAdmin.
 	if (!empty($a_name) && $a_name != '*')
 	{
         if (is_array($a_name))
@@ -162,12 +163,12 @@
  */
 function dbcbackup_header()
 {
-	//@todo tidy this up
+	//@todo tidy this up   with my plugin info
 	$link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
 	$header = "# ####################################################### \n";
 	$header .= "#  \n";
 	$header .= "# DBC Backup 2\n";
-	$header .= "# Version 2.3 for Wordpress 3.6 \n";
+	$header .= "# Version 2.4 for Wordpress 3.6 \n";
 	$header .= "# Plugin by Damien Saunders http://wordpress.damien.co \n";
 	$header .= "# Generated: ".date('l dS \of F Y h:i A', time() + (get_option('gmt_offset') * 3600))." \n";
 	$header .= "# MySQL Server: ".mysqli_get_host_info($link)."\n";
@@ -183,7 +184,8 @@ function dbcbackup_header()
 /**
  * @param $result
  * @return array
- */function dbcbackup_fields($result) {
+ */
+function dbcbackup_fields($result) {
     $fields       = 	array();
     $num_fields   = 	mysqli_num_fields($result);
     for ($i = 0; $i < $num_fields; $i++)
@@ -201,7 +203,8 @@ function dbcbackup_header()
  * @param bool   $crlf
  * @param bool   $php_code
  * @return mixed
- */function dbcbackup_addslashes($a_string = '', $is_like = false, $crlf = false, $php_code = false)
+ */
+function dbcbackup_addslashes($a_string = '', $is_like = false, $crlf = false, $php_code = false)
 {	//Taken from phpMyAdmin.
 	if ($is_like) {
 		$a_string = str_replace('\\', '\\\\\\\\', $a_string);
@@ -262,7 +265,8 @@ function dbcbackup_open($fp, $mode='write')
 /**
  * @param $fp
  * @return string
- */function dbcbackup_read($fp)
+ */
+function dbcbackup_read($fp)
 {
 	switch(DBC_COMPRESSION)
 	{
