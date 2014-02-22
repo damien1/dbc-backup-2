@@ -11,8 +11,38 @@ License: GPLv2 or later
 
 /**
  * You shouldn't be here.
+ * since v2.4 changed to WPINC  from ABSPATH
+ * this means WordPress has been called :)
+ *
  */
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'WPINC' ) ) die;
+
+
+/**
+ * PUBLIC FACING FUNCTIONS
+ * since v2.3
+ *
+ */
+
+// PHP 5.0 introduced mysqli module
+// but it was not enabled by default til PHP 5.3
+if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+    // echo 'I am using Old PHP, my version: ' . PHP_VERSION . "\n";
+    error_log("WordPress requires at least 5.2.4. PHP mysqli is default enabled from 5.4.x", 0);
+    require_once('inc/dbc_backup_mysql_functions.php');
+
+}  elseif (version_compare(PHP_VERSION, '5.3.0') >= 0) {
+    //echo 'I am at least PHP version 5.3.0, my version: ' . PHP_VERSION . "\n";
+    require_once('inc/dbc_backup_mysqli_functions.php');
+}
+
+// backup files
+//require_once ('inc/backup_run.php');
+
+//functions for the admin page are called at the top of the options.php
+//include ('inc/admin_functions.php');
+
+
 /**
  * Globals
  */
@@ -22,6 +52,15 @@ global $plugin;
 
 // @todo implement this default location and make it work for 1st time users.
 define ("DBCBACKUP2_LOCATION", "../wp-content/backup");
+
+
+/**
+ *
+ *  ENVIRONMENT SETUP
+ *
+ */
+
+
 
 // Define application environment
 defined('APPLICATION_ENV')
@@ -71,35 +110,6 @@ function damien_dbc_set_default_options() {
 add_action('admin_init', 'damien_dbc_set_default_options');
 
 
-
-
-/**
- * INCLUDED FILES
- * since v2.3
- * @return array|bool
- */
-
-// PHP 5.0 introduced mysqli module
-// but it was not enabled by default til PHP 5.3
-if (version_compare(PHP_VERSION, '5.3.0', '<')) {
-   // echo 'I am using Old PHP, my version: ' . PHP_VERSION . "\n";
-    error_log("WordPress requires at least 5.2.4. PHP mysqli is default enabled from 5.4.x", 0);
-    require_once('inc/dbc_backup_mysql_functions.php');
-
-}  elseif (version_compare(PHP_VERSION, '5.3.0') >= 0) {
-    //echo 'I am at least PHP version 5.3.0, my version: ' . PHP_VERSION . "\n";
-    require_once('inc/dbc_backup_mysqli_functions.php');
-}
-
-// backup files
-require_once ('inc/backup_run.php');
-
-//functions for the admin page are called at the top of the options.php
-//include ('inc/admin_functions.php');
-
-
-
-
 /**
  * i18n -- I need to look at the POT stuff for v2.2
  *
@@ -125,12 +135,13 @@ function dbcbackup_menu()
 }
 add_action('admin_menu', 'dbcbackup_menu');
 
+
 /**
  *
  */
 function damien_dbc_inc_my_page()
 {
-	include dirname(__FILE__).'/dbcbackup-options.php';
+	include dirname(__FILE__) . '/inc/dbcbackup-options.php';
 }
 
 
