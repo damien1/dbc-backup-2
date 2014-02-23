@@ -194,8 +194,6 @@ function dbc_backup_settings_link($links) {
   array_unshift($links, $settings_link); 
   return $links; 
 }
- 
-$plugin = plugin_basename(__FILE__); 
 add_filter("plugin_action_links_$plugin", 'dbc_backup_settings_link' );
 
 
