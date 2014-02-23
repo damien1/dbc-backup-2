@@ -24,24 +24,26 @@ function damien_dbc_admin_add_help_tab () {
 					</ol>',
 ));
  
-/*
+
 $screen->add_help_tab( array(
-    'id'      => 'vpl-modules',
-    'title'   => __('vpl Modules', 'vpl'),
-    'content' => "HTML for help content",
+    'id'      => 'dbc-download',
+    'title'   => __('How to download my backup', 'dbc'),
+    'content' => '<p>Your backup directory is protected to block anyone browsing or attempting to directly download your precious database backup.</p>
+                   <p>FTP or SFTP Download<br>
+                   You will need to use an FTP client to transfer your backup from your webserver to your pc or other location.',
 ));
-*/
- 
-/*$screen->add_help_tab( array(
-    'id'      => 'paging',
-    'title'   => __('Paging', 'vpl'),
-    'content' => '<p>Paging is cool - but taxing</p><ol>
-					<li>Use the shortcode attribute [dbc_isotope paging=on]</li>
-					<li>Default number of posts is now 20</li>
-					<li>Careful not to enable paging and set your posts per page too high - as it eats memory</li>
+
+$screen->add_help_tab( array(
+    'id'      => 'dbc-restore',
+    'title'   => __('How to restore my backup', 'vpl'),
+    'content' => '<p>Restoring your backup is easy with PHPMyAdmin or apps like SequelPro</p><ol>
+					<li>Look on line for guides on how to use PHPMyAdmin to import a sql file.</li>
+					<li>Before I release an update of this plugin, I import a file using Sequel Pro (Mac OSx) into a test MySQL database.</li>
+					<li>Did you know you can also open a sql file in apps like NotePad to check the file is not corrupt.</li>
 					</ol>',
 ));    
-    $screen->add_help_tab( array(
+
+ /*   $screen->add_help_tab( array(
         'id'	=> 'shortcode',
         'title'	=> __('Shortcode Options'),
         'content'	=> '<p>' . __( '<p>You can configure the number of posts to show. Here are a couple of examples</p>
