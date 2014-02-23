@@ -12,11 +12,16 @@
 
 function dbcbackup_run($mode = 'auto')
 {
-    $link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
+$link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
 if(defined('DBC_BACKUP_RETURN')) return;
 $cfg = get_option('dbcbackup_options');
 if(!$cfg['active'] AND $mode == 'auto') return;
-if(empty($cfg['export_dir'])) return;
+
+    if(empty($cfg['export_dir'])) {
+        $ret = "<div class='error'><p>No backup location set. Enter something like ../wp-content/backup below and then click Save Settings.</p></div>";
+
+        echo $ret;
+    }
 if($mode == 'auto')	dbcbackup_locale();
 
 define('DBC_COMPRESSION', $cfg['compression']);
