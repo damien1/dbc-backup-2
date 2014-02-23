@@ -40,12 +40,6 @@ if (version_compare(PHP_VERSION, '5.3.0', '<')) {
    require_once ('inc/backup_run.php');
 }
 
-// backup files
-//require_once ('inc/backup_run.php');
-
-//functions for the admin page are called at the top of the options.php
-//include ('inc/admin_functions.php');
-
 
 /**
  * Globals
@@ -86,15 +80,24 @@ if ( 'development'== APPLICATION_ENV) {
 
 
 /* ------------------------------------------------------------------------ *
- * If you delete the plugin - I'll feel sad
+ * Plugin Hooks   ---  If you delete the plugin - I'll feel sad
  * ------------------------------------------------------------------------ */
 
-register_deactivation_hook(__FILE__, 'dbcbackup_deactiveate');
+register_deactivation_hook(__FILE__, 'dbcbackup_deactivate');
 
 
 // note there is no plugin activation hook as the user has to first define the settings //
 
-
+/**
+ * Deactivate function
+ *
+ * since v2.1
+ * since v2.4 if you deactivate, we don't delete the settings
+ */
+function dbcbackup_deactivate()
+{
+    wp_clear_scheduled_hook('dbc_backup');
+}
 
 /**
  * Gets the stored presets from the database so we can use them in the Admin page
@@ -122,6 +125,7 @@ function damien_dbc_set_default_options() {
 		$new_options['rotate'] =-1;
 		$new_options['version'] = DBCBACKUP2_VERSION;
 		$new_options['export_dir'] = "";
+        //$new_options['warning'] = "";
 		add_option('dbcbackup_options', $new_options);
 	}
 }
@@ -129,7 +133,8 @@ add_action('admin_init', 'damien_dbc_set_default_options');
 
 
 /**
- * i18n -- I need to look at the POT stuff for v2.2
+ * i18n --
+ * @todo I need to look at the POT stuff for v2.2
  *
  */function dbcbackup_locale()
 {
@@ -199,6 +204,22 @@ add_filter("plugin_action_links_$plugin", 'dbc_backup_settings_link' );
 /* ------------------------------------------------------------------------ *
  * Boring stuff
  * ------------------------------------------------------------------------ */
+
+
+
+//add_action('admin_notices', 'dbcbackup_admin_notices');
+function dbcbackup_admin_notices() {
+    $damien_dbc_option  = get_option('dbcbackup_options');
+    if (!$damien_dbc_option['warning'] && (version_compare(PHP_VERSION, '5.3.0', '<')))  {
+        $ret = "<div class='update-nag'><p>Since PHP v5.5 mysql connector is deprecated. Your server is ";
+        $ret .= PHP_VERSION ." Please update your server to at least v5.3.</p></div>";
+        echo $ret;
+        $damien_dbc_option['warning'] = true;
+        update_option('dbcbackup_options', $damien_dbc_option);
+    }
+}
+
+
 
 
 

@@ -10,6 +10,8 @@ if(!defined('WP_ADMIN') OR !current_user_can('manage_options')) wp_die(__('You d
 //admin page functions  ///
 require_once('admin_functions.php');
 
+// this is the PHP version notice
+dbcbackup_admin_notices();
 
 
 /* ------------------------------------------------------------------------ *
@@ -36,13 +38,7 @@ require_once('admin_functions.php');
 			<div class="postbox">
 				<h3><span>Backup Settings Status</span></h3>
 				<div class="inside">
-					<?php
-                    echo 'Current PHP version: ' . phpversion().'<br />';
-
-                    if (version_compare(PHP_VERSION, '5.2.0', '<')) {
-                        echo 'I am using PHP 4, my version: ' . PHP_VERSION . "\n";
-                    }
-                    echo implode('<br />', $dbc_msg); ?>
+					<?php echo implode('<br />', $dbc_msg); ?>
 					</div>
 				</div>
 						<div class="postbox">
