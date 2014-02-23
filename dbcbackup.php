@@ -82,6 +82,20 @@ if ( 'development'== APPLICATION_ENV) {
     define ("PLUGIN_NAME", "@PLUGINNAME@");
 }
 
+
+
+
+/* ------------------------------------------------------------------------ *
+ * If you delete the plugin - I'll feel sad
+ * ------------------------------------------------------------------------ */
+
+register_deactivation_hook(__FILE__, 'dbcbackup_deactiveate');
+
+
+// note there is no plugin activation hook as the user has to first define the settings //
+
+
+
 /**
  * Gets the stored presets from the database so we can use them in the Admin page
  * since v2.1
@@ -208,26 +222,5 @@ wp_widget_rss_output( array(
 	));
 echo '</div>';
 }
-
-
-/* ------------------------------------------------------------------------ *
- * If you delete the plugin - I'll feel sad
- * ------------------------------------------------------------------------ */
-
-
-
-/**
- * Uninstall function
- * Ill be sorry to see you leave
- * since v2.1
- */
-function dbcbackup_uninstall()
-{
-	wp_clear_scheduled_hook('dbc_backup');
-	delete_option('dbcbackup_options');
-}
-register_deactivation_hook(__FILE__, 'dbcbackup_uninstall');
-
-
 
 ?>
