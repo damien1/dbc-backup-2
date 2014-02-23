@@ -60,7 +60,7 @@ $screen->add_help_tab( array(
     
     
     $screen->set_help_sidebar( '<p>' .'Related Content'. '</p> <p>Thanks for using my plugin ' . DBCBACKUP2_VERSION .
-					'<ul><li><a target="_blank" href="http://wordpress.damien.co/?s=dbc-backup-2/?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_content=help&utm_campaign=dbc-backup">Help & FAQs</a></li>
+					'<ul><li><a target="_blank" href="https://bitbucket.org/damien1/help/wiki/Home?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_content=help&utm_campaign=dbc-backup">Help & FAQs</a></li>
 					<li><a target="_blank" href="http://wordpress.damien.co/?utm_source=WordPress&utm_medium=dbc-backup-installed&utm_content=help&utm_campaign=dbc-backup">More WordPress Tips & Ideas</a></li>
 					</ul>'
     

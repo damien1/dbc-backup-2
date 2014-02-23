@@ -60,7 +60,7 @@ require_once('admin_functions.php');
 							<h3><span>Help & Support</span></h3>
 							<div class="inside">
 								<ul>
-								<li><a target="_blank" href="http://wordpress.damien.co/dbc-backup-2/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.3&utm_campaign=WordPress-Plugin">Help & FAQ's</a></li>
+								<li><a target="_blank" href="https://bitbucket.org/damien1/help/wiki/Home?utm_source=WordPress&utm_medium=dbc-backup-installed-2.3&utm_campaign=WordPress-Plugin">Help & FAQ's</a></li>
 								<li><a target="_blank" href="http://wordpress.damien.co/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.3&utm_campaign=WordPress-Plugin">More WordPress Tips & Ideas</a></li>
 								</ul>
 							</div>
