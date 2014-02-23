@@ -28,7 +28,7 @@ if ( ! defined( 'WPINC' ) ) die;
 // but it was not enabled by default til PHP 5.3
 if (version_compare(PHP_VERSION, '5.3.0', '<')) {
     // echo 'I am using Old PHP, my version: ' . PHP_VERSION . "\n";
-    error_log("WordPress requires at least 5.2.4. PHP mysqli is default enabled from 5.4.x", 0);
+    error_log("WordPress requires at least 5.2.4. Check that PHP mysqli connector is default enabled - since v5.3", 0);
     require_once ('inc/dbc_backup_mysql_functions.php');
     // backup files
     require_once ('inc/dbc_backup_mysql_backup_run.php');
