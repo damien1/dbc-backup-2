@@ -125,7 +125,6 @@ function damien_dbc_set_default_options() {
 		$new_options['rotate'] =-1;
 		$new_options['version'] = DBCBACKUP2_VERSION;
 		$new_options['export_dir'] = "";
-        //$new_options['warning'] = "";
 		add_option('dbcbackup_options', $new_options);
 	}
 }
