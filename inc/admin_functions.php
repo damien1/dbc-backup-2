@@ -276,10 +276,9 @@ else {
  * since v2.1
  * since v2.4 if you deactivate, we don't delete the settings
  */
-function dbcbackup_uninstall()
+function dbcbackup_deactivate()
 {
     wp_clear_scheduled_hook('dbc_backup');
-    //delete_option('dbcbackup_options');
 }
 
 

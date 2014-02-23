@@ -39,7 +39,7 @@ require_once('admin_functions.php');
 					<?php
                     echo 'Current PHP version: ' . phpversion().'<br />';
 
-                    if (version_compare(PHP_VERSION, '5.0.0', '<')) {
+                    if (version_compare(PHP_VERSION, '5.2.0', '<')) {
                         echo 'I am using PHP 4, my version: ' . PHP_VERSION . "\n";
                     }
                     echo implode('<br />', $dbc_msg); ?>
@@ -201,7 +201,7 @@ require_once('admin_functions.php');
 		 <tr>
 			<td colspan="2" align="center">
 				<input type="hidden" name="do" value="dbc_setup" />
-				<input type="submit" name="submit" class="button-primary" value="<?php _e('Save Changes', 'dbcbackup'); ?>" /> 
+				<input type="submit" name="submit" class="button-primary" value="<?php _e('Save Settings', 'dbcbackup'); ?>" />
 			</td>
 		</tr> 
 	</table>
