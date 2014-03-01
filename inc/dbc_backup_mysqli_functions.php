@@ -13,17 +13,17 @@
 	if (!$is_safe_mode) set_time_limit(600);
 	$res ='';
 	$res .= "\n";
-	$res .= "# Table structure of table ".dbcbackup_backquote($table)."\n";
+	$res .= "# Dump of table ".dbcbackup_backquote($table)."\n";
 	$res .= "# ------------------------------------------------------- \n";
 	$res .= "\n";
 
 	if($sql = mysqli_query($link, "SHOW CREATE TABLE ".dbcbackup_backquote($table)))
 	{
-		$res .= "DROP TABLE IF EXISTS ".dbcbackup_backquote($table).";\n";
+		$res .= "DROP TABLE IF EXISTS ".dbcbackup_backquote($table).";\n\n";
 		$row = mysqli_fetch_array($sql, MYSQLI_BOTH);
 		$create_table = $row[1];
 		unset($row);
-		$create_table = preg_replace('/^CREATE TABLE/', 'CREATE TABLE IF NOT EXISTS', $create_table);
+		$create_table = preg_replace('/^CREATE TABLE/', 'CREATE TABLE ', $create_table);
 		//@todo delete the next line if this works
 		//$create_table = preg_replace("/ENGINE\s?=/", "TYPE=", $create_table);
 		$create_table .= ";\n";
@@ -190,7 +190,7 @@ function dbcbackup_fields($result) {
     $num_fields   = 	mysqli_num_fields($result);
     for ($i = 0; $i < $num_fields; $i++)
 	{
-        $fields[] = mysqli_fetch_field($result, $i);
+        $fields[] = mysqli_fetch_field($result);
     }
     return (array($num_fields, $fields));
 }
