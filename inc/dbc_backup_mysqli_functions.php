@@ -85,7 +85,7 @@
 				}
               	if (!isset($row[$fieldcounter]) || is_null($row[$fieldcounter])) {
                     $res     .= 'NULL';
-                } elseif ($fields_meta[$fieldcounter]->numeric && $fields_meta[$fieldcounter]->type != 'timestamp'
+                } elseif (isset($fields_meta[$fieldcounter]->numeric) && $fields_meta[$fieldcounter]->type != 'timestamp'
                         && ! $fields_meta[$fieldcounter]->blob) {
                     $res .= $row[$fieldcounter];
                 } elseif (stristr($fields_tmp[1], 'BINARY')
