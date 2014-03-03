@@ -5,10 +5,10 @@
  */
 
 if ( ! defined( 'WPINC' ) ) exit;
-if(!defined('WP_ADMIN') OR !current_user_can('manage_options')) wp_die(__('You do not have sufficient permissions to access this page.'));
+if( !defined('WP_ADMIN') OR !current_user_can('manage_options') ) wp_die(__('You do not have sufficient permissions to access this page.') );
 
 //admin page functions  ///
-require_once('admin_functions.php');
+include_once ( 'admin_functions.php' );
 
 // this is the PHP version notice
 dbcbackup_admin_notices();
@@ -38,7 +38,10 @@ dbcbackup_admin_notices();
 			<div class="postbox">
 				<h3><span>Backup Settings Status</span></h3>
 				<div class="inside">
-					<?php echo implode('<br />', $dbc_msg); ?>
+					<?php echo implode('<br />', $dbc_msg);
+
+
+                    ?>
 					</div>
 				</div>
 						<div class="postbox">
@@ -56,8 +59,8 @@ dbcbackup_admin_notices();
 							<h3><span>Help & Support</span></h3>
 							<div class="inside">
 								<ul>
-								<li><a target="_blank" href="https://bitbucket.org/damien1/help/wiki/Home?utm_source=WordPress&utm_medium=dbc-backup-installed-2.3&utm_campaign=WordPress-Plugin">Help & FAQ's</a></li>
-								<li><a target="_blank" href="http://wordpress.damien.co/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.3&utm_campaign=WordPress-Plugin">More WordPress Tips & Ideas</a></li>
+								<li><a target="_blank" href="https://bitbucket.org/damien1/help/wiki/Home?utm_source=WordPress&utm_medium=dbc-backup-installed-2.4&utm_campaign=WordPress-Plugin">Help & FAQ's</a></li>
+								<li><a target="_blank" href="http://wordpress.damien.co/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.4&utm_campaign=WordPress-Plugin">More WordPress Tips & Ideas</a></li>
 								</ul>
 							</div>
 						</div>
@@ -65,8 +68,8 @@ dbcbackup_admin_notices();
 							<h3><span>Services & Plugins from Damien</span></h3>
 							<div class="inside">
 							<ul>
-								<li><a target="_blank" href="http://wordpress.damien.co/isotope/?utm_source=WordPress&utm_medium=dbc-sitewide-installed&utm_campaign=WordPress-Plugin">Isotope</a> - does amazing visual things for your website.</li>
-							<li><a target="_blank" href="http://whitetshirtdigital.com/shop/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.3&utm_campaign=WordPress-Plugin">Learn more about digital marketing or WordPress</a> with Damien.</li>
+								<li><a target="_blank" href="http://wordpress.damien.co/isotope/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.4&utm_campaign=Isotope">Isotope</a> - does amazing visual things for your website.</li>
+							<li><a target="_blank" href="http://whitetshirtdigital.com/shop/?utm_source=WordPress&utm_medium=dbc-backup-installed-2.4&utm_campaign=WordPress-Learn">Learn more about digital marketing or WordPress</a> with Damien.</li>
 							</ul>
 							</div>
 						</div>			
@@ -89,7 +92,7 @@ dbcbackup_admin_notices();
 				<option value="dbc_logerase"><?php _e('Erase Logs', 'dbcbackup'); ?></option>
 				<option value="dbc_backupnow"><?php _e('Backup Now', 'dbcbackup'); ?></option>
 			</select>
-			<input style="display:inline;" type="submit" name="submit" class="button" value="<?php _e('Go', 'dbcbackup'); ?>" /> 
+			<input type="submit" name="submit" class="button" value="<?php _e('Go', 'dbcbackup'); ?>" />
 		</form></li>
 	</ul>
 	<form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>"> 
@@ -209,39 +212,11 @@ dbcbackup_admin_notices();
 				<h3><span>Backup Log</span></h3>
 				<div class="inside">
 					<?php 
-		/* 
-		 * here we insert the log files if there are any 
-		 */
-					if(!empty($cfg['logs'])): ?>
-					<table class="widefat">
-					<thead>
-					  <tr>
-						<th scope="col">#</th>
-						<th scope="col"><?php _e('Date', 'dbcbackup'); ?></th>
-						<th scope="col"><?php _e('Status', 'dbcbackup'); ?></th>
-						<th scope="col"><?php _e('Finished In', 'dbcbackup'); ?></th>
-						<th scope="col"><?php _e('File', 'dbcbackup'); ?></th>
-						<th scope="col"><?php _e('Filesize', 'dbcbackup'); ?></th>
-						<th scope="col"><?php _e('Removed', 'dbcbackup'); ?></th>
-					  </tr>
-					</thead>
-					<tbody>
-					<?php 
-					$i = 0;
-					foreach($cfg['logs'] AS $log): ?>
-					  <tr>
-						<td><?php echo ++$i; ?></td>
-						<td><?php echo date('Y-m-d H:i:s', $log['started']); ?></td>
-						<td><?php echo $log['status']; ?></td>
-						<td><?php echo round($log['took'], 3); ?> <?php _e('seconds', 'dbcbackup'); ?></td>
-						<td><?php echo basename($log['file']); ?></td>
-						<td><?php echo size_format($log['size'], 2); ?></td>
-						<td><?php echo sprintf(__("%s old backups", 'dbcbackup'), intval($log['removed'])); ?></td>
-					  </tr>
-					  <?php endforeach; ?>
-					</tbody>
-					</table>
-					<?php endif;?>
+		    /*
+		     * here we insert the log files if there are any
+		     */
+                    include_once ( 'views/admin-logs.php' );
+					?>
 				</div> <!-- .inside -->
 			</div>
 			<!-- end of BACKUP LOG -->
