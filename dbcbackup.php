@@ -207,7 +207,7 @@ add_filter("plugin_action_links_$plugin", 'dbc_backup_settings_link' );
 //add_action('admin_notices', 'dbcbackup_admin_notices');
 function dbcbackup_admin_notices() {
     $damien_dbc_option  = get_option('dbcbackup_options');
-    if (!$damien_dbc_option['warning'] && (version_compare(PHP_VERSION, '5.3.0', '<')))  {
+    if ( ( version_compare(PHP_VERSION, '5.3.0', '<') ) && ( !$damien_dbc_option['warning'] ) ) {
         $ret = "<div class='update-nag'><p>Since PHP v5.5 mysql connector is deprecated. Your server is ";
         $ret .= PHP_VERSION ." Please update your server to at least v5.3.</p></div>";
         echo $ret;
