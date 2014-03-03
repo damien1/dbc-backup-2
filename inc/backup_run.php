@@ -15,6 +15,9 @@ function dbcbackup_run($mode = 'auto')
 $link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
 if(defined('DBC_BACKUP_RETURN')) return;
 $cfg = get_option('dbcbackup_options');
+
+
+
 if(!$cfg['active'] AND $mode == 'auto') return;
 
     if(empty($cfg['export_dir'])) {
@@ -51,7 +54,7 @@ $result = __('Successful', 'dbcbackup');
 }
 else
 {
-$result = sprintf(__("Scheduled Backup Failed - probably cause wp-cron didn't start: %s.", 'dbcbackup'), $fp);
+$result = sprintf(__("Scheduled backup Failed - probably cause wp-cron didn't start: %s.", 'dbcbackup'), $fp);
 }
 $mtime 			= 	explode(' ', microtime());
 $time_end 		= 	$mtime[1] + $mtime[0];
