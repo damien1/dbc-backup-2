@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * Copyright © 2014, All Rights Reserved. Damien Saunders
+ * Since v2.4
  * @param $table
  * @param $fp
  *

@@ -1,7 +1,8 @@
 <?php
 /*
  * Plugin Options for DBC Backup 2
- *
+ * Copyright © 2010, All Rights Reserved. Damien Saunders
+ * Since v2.0
  */
 
 if ( ! defined( 'WPINC' ) ) exit;

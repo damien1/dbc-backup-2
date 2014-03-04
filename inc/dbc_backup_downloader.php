@@ -4,8 +4,8 @@
  * User: damien
  * Date: 03/03/2014
  * Time: 22:58
- *
- * since v2.4
+ * Copyright © 2014, All Rights Reserved. Damien Saunders
+ * Since v2.4
  *
  */
 

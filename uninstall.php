@@ -4,6 +4,8 @@
  * User: damien
  * Date: 23/02/2014
  * Time: 14:23
+ * Copyright ©2014 All Rights Reserved Damien Saunders
+ * Since v2.4
  */
 
 // If uninstall not called from WordPress, then exit

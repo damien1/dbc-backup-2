@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * Copyright © 2014, All Rights Reserved. Damien Saunders
+ * Since v2.4
  * this file is for people using PHP5.0 and not enabled the mysqli PHP module
  *
  * @param $table

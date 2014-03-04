@@ -1,5 +1,7 @@
 <?php
 
+// Copyright © 2014, All Rights Reserved. Damien Saunders
+
 // @todo fix up the translations
 // dbcbackup_locale();
 
@@ -197,9 +199,10 @@ else {
 }
 
 
-
-
- function dbc_backup_make_folders(){
+/**
+ * since v2.4
+ */
+function dbc_backup_make_folders(){
 
      //
 // here we go make directories

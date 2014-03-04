@@ -1,9 +1,11 @@
 <?php
 
 /**
-* @param string $mode
-*
-* @return array|bool
+ * Copyright © 2010, All Rights Reserved. Damien Saunders
+ * Since v2
+ * @param string $mode
+ *
+ * @return array|bool
 */
 
 function dbcbackup_run($mode = 'auto')
