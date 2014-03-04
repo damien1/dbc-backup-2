@@ -51,9 +51,15 @@ This build @THISBUILD@
 - WARNING - MYSQL connector deprecated since PHP 5.5.0 mysqli connector used instead
 - Regression fix for those people whose server uses MYSQL v5 but not enable mysqli
 - WARNING PHP 5.x and MYSQL 5.2.4 minimum for WordPress
+
 - So .. what's new ?? re-written this plugin to use mysqli connector
 - Updated - protection for your backup folder. If you've switched from any other backup plugin, you can use the same directory
 - Updated - error messages so you know what's protected or if wp-cron didn't run
+- NEW introduces the mysqli connector
+- NEW extra help info
+- fixes issue #22 with the backups taking too long
+- NEW just added download functionality
+
 
 
 = Version 2.3 =
