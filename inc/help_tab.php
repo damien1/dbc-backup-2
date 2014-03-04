@@ -28,9 +28,12 @@ function damien_dbc_admin_add_help_tab () {
 $screen->add_help_tab( array(
     'id'      => 'dbc-download',
     'title'   => __('How to download my backup', 'dbc'),
-    'content' => '<p>Your backup directory is protected to block anyone browsing or attempting to directly download your precious database backup.</p>
-                   <p>FTP or SFTP Download<br>
-                   You will need to use an FTP client to transfer your backup from your webserver to your pc or other location.',
+    'content' => '<p>Your Protected<br>
+                   Your backup directory is protected to block anyone browsing or attempting to directly download your precious database backup.</p>
+                   <ol><li>FTP or SFTP Download<br>
+                   You will need to use an FTP client to transfer your backup from your webserver to your pc or other location.</li>
+                    <li>Web Browser<br>
+                    You can download the backup file if your download is less than 2Gb. Look for the dl link in the Backup Log.',
 ));
 
 $screen->add_help_tab( array(
@@ -43,20 +46,7 @@ $screen->add_help_tab( array(
 					</ol>',
 ));    
 
- /*   $screen->add_help_tab( array(
-        'id'	=> 'shortcode',
-        'title'	=> __('Shortcode Options'),
-        'content'	=> '<p>' . __( '<p>You can configure the number of posts to show. Here are a couple of examples</p>
-				<ul>
-				<li> [dbc_isotope posts=5] will show 5 posts</li>
-				<li> [dbc_isotope posts=-1] will show all posts</li>
-				<li> [dbc_isotope posts=-1 post_type=feedback] will show all posts from custom post type feedback</li>
-				<li> [dbc_isotope cats=5] will show 10 posts from category 5</li> 
-				<li> [dbc_isotope order=DESC] defaults to most recent posts first but you can change this to ASC to go with oldest.</li>
 
-						</ul>' ) . '</p>',
-    ) );                                  */
-    
     
     
     $screen->set_help_sidebar( '<p>' .'Related Content'. '</p> <p>Thanks for using my plugin ' . DBCBACKUP2_VERSION .
