@@ -4,9 +4,18 @@
  * User: damien
  * Date: 02/03/2014
  * Time: 14:06
+ * Copyright © 2014, All Rights Reserved. Damien Saunders
+ * Since v2.4
  */
 
-
+  // some variables
+ $dbc_date = '';
+ $dbc_status = '';
+ $dbc_time = '';
+ $dbc_file_name = '';
+ $dbc_backup_file = '';
+ $dbc_server_path = ($_SERVER["DOCUMENT_ROOT"]);
+ $dbc_downloader_path = '/inc/dbc_backup_downloader.php?download_file='; // path to downloader
 
 
 if(!empty($cfg['logs'])): ?>
@@ -17,26 +26,47 @@ if(!empty($cfg['logs'])): ?>
             <th scope="col"><?php _e('Date', 'dbcbackup'); ?></th>
             <th scope="col"><?php _e('Status', 'dbcbackup'); ?></th>
             <th scope="col"><?php _e('Finished In', 'dbcbackup'); ?></th>
-            <th scope="col"><?php _e('File', 'dbcbackup'); ?></th>
+            <th scope="col"><?php _e('Download', 'dbcbackup'); ?></th>
+<!--            <th scope="col">--><?php //_e('Download', 'dbcbackup'); ?><!--</th>-->
             <th scope="col"><?php _e('Filesize', 'dbcbackup'); ?></th>
-            <th scope="col"><?php _e('Removed', 'dbcbackup'); ?></th>
+            <th scope="col"><?php _e('Backups Removed', 'dbcbackup'); ?></th>
         </tr>
         </thead>
         <tbody>
         <?php
         $i = 0;
         foreach($cfg['logs'] AS $log):
-            $dbc_file_name = ($cfg['export_dir']).'/'.basename($log['file']);?>
-            <tr>
-                <td><?php echo ++$i; ?></td>
-                <td><?php echo date('Y-m-d H:i:s', $log['started']); ?></td>
-                <td><?php echo $log['status']; ?></td>
-                <td><?php echo round($log['took'], 3); ?> <?php _e('seconds', 'dbcbackup'); ?></td>
-                <td><?php echo basename($log['file']); ?> <a target="_blank" href="http://dev.damien.home/wp-content/plugins/dbc-backup-2/inc/dbc_backup_downloader.php?download_file=<?php echo $dbc_file_name;?>">dl</a>  </td>
-                <td><?php echo size_format($log['size'], 2); ?></td>
-                <td><?php echo sprintf(__("%s old backups", 'dbcbackup'), intval($log['removed'])); ?></td>
-            </tr>
-        <?php endforeach; ?>
+            $dbc_base_name =  basename($log['file']);
+            $dbc_file_name = ($cfg['export_dir']).'/'.$dbc_base_name;
+            $dbc_backup_file = str_replace("..", "", $dbc_file_name);   // check if the file path is relative
+
+            $dbc_date= date('Y-m-d H:i:s', $log['started']);
+            $dbc_status = $log['status'];
+            $dbc_time =  round($log['took'], 3) .' seconds';
+            $dbc_size =  size_format($log['size'], 2);
+            $dbc_delete = intval($log['removed']);
+            $ret = '<tr>';
+            $ret .= '<td>' . ++$i . '</td>';
+            $ret .= '<td>' . $dbc_date . '</td>';
+            $ret .= '<td>' . $dbc_status . '</td>';
+            $ret .= '<td>' . $dbc_time . '</td>';
+           // $ret .= '<td>' . $dbc_base_name . '</td>';
+            $ret .= '<td>';
+            if (file_exists($dbc_server_path . $dbc_backup_file )){
+            $ret .= '<a target="_blank" href="';
+                // @todo remove hardcoded url
+            $ret .= 'http://dev.damien.home/wp-content/plugins/dbc-backup-2';
+            $ret .= $dbc_downloader_path;
+            $ret .= $dbc_file_name;
+            $ret .= '">dl</a>';
+            }
+            $ret .= '</td>';
+            $ret .= '<td>' . $dbc_size . '</td>';
+            $ret .= '<td>' . $dbc_delete . '</td>';
+            $ret .= '</tr>';
+            echo $ret;
+
+            endforeach; ?>
         </tbody>
     </table>
 <?php endif;
