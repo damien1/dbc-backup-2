@@ -44,9 +44,13 @@ if (version_compare(PHP_VERSION, '5.3.0', '<')) {
 /**
  * Globals
  */
-$plugin = plugin_basename(__FILE__);
+$dbc_plugin = plugin_basename(__FILE__);
+$dbc_plugin_path = plugin_dir_path( __FILE__ );
+$dbc_plugin_url = plugin_dir_url( __FILE__ );
+global $dbc_plugin_url;
 global $damien_dbc_option;
-global $plugin;
+global $dbc_plugin_path;
+
 
 // @todo implement this default location and make it work for 1st time users.
 define ("DBCBACKUP2_LOCATION", "../wp-content/backup");
@@ -194,7 +198,7 @@ function dbc_backup_settings_link($links) {
   array_unshift($links, $settings_link); 
   return $links; 
 }
-add_filter("plugin_action_links_$plugin", 'dbc_backup_settings_link' );
+add_filter("plugin_action_links_$dbc_plugin", 'dbc_backup_settings_link' );
 
 
 
