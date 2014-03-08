@@ -68,23 +68,14 @@ elseif   ('dbc_backupnow' == $dbc_cnt )
         //$dbc_msg[] ='done for now';
         //return $dbc_msg;
     }
-//elseif ($_POST['do'] == 'dbc_setup')
 
  elseif ('dbc_setup' == $dbc_cnt)
     {
-    // echo "test";
+
     //print_r($dbc_cnt);
 	//we check the admin referrer
         // and setup the $temp values that we need
-        $dbc_export_dir =   ($cfg['export_dir']);
-        if(empty ($dbc_export_dir))
-        {
-            $ret = "<div class='error'><p>New User - No backup location set. Enter something like ../wp-content/backup below and then click Save Settings (1).</p></div>";
-
-            echo $ret;
-        }
-
-        else {
+     $dbc_export_dir =   ($cfg['export_dir']);
 
 
 	check_admin_referer('dbc_options');
