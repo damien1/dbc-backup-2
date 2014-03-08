@@ -95,6 +95,27 @@ elseif   ('dbc_backupnow' == $dbc_cnt )
 	$minutes 				= 	intval($_POST['minutes']);
 	$seconds 				= 	intval($_POST['seconds']);
 	$temp['schedule'] 		= 	mktime($hours, $minutes, $seconds, $month, $day, $year);
+
+        if(empty ($dbc_export_dir) && empty ($temp['export_dir'])  )
+        {
+            $ret = "<div class='error' name='new-user-error'><p>New User? No backup location set. Enter something like ../wp-content/backup below and then click Save Settings (1).</p></div>";
+
+            echo $ret;
+        }
+
+        elseif(!empty ($dbc_export_dir) && empty ($temp['export_dir'])  )
+        {
+            $ret = "<div class='error' name='silly-user-error'><p>Hey -- Why would you try to do clear your backup folder (2).</p></div>";
+
+            echo $ret;
+        }
+
+
+
+
+
+        else {
+    // save the options to the database
 	update_option('dbcbackup_options', $temp);
 
     // now we check and compare existing settings -- if the plugin has been installed and used ...
@@ -170,13 +191,12 @@ elseif   ('dbc_backupnow' == $dbc_cnt )
              }
          }
      }
-     elseif(empty ($dbc_export_dir))
+   elseif(empty ($temp['export_dir']))
      {
          $ret = "<div class='update-nag'><p>New User - No backup location set. Enter something like ../wp-content/backup below and then click Save Settings (2).</p></div>";
 
          echo $ret;
      }
-
         }
 }
 
@@ -189,6 +209,7 @@ elseif   ('dbc_backupnow' == $dbc_cnt )
  */
 function dbc_check_condoms(){
     $cfg = get_option('dbcbackup_options');
+    $dbc_export_dir =   ($cfg['export_dir']);
     if(!is_dir($dbc_export_dir))
     {
     $dbc_msg = sprintf(__("Backup Folder <strong>%s</strong> not found.", 'dbcbackup'), $dbc_export_dir);
