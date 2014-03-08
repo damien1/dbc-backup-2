@@ -21,7 +21,7 @@ $cfg = get_option('dbcbackup_options');
 if(!$cfg['active'] AND $mode == 'auto') return;
 
     if(empty($cfg['export_dir'])) {
-        $ret = "<div class='error'><p>No backup location set. Enter something like ../wp-content/backup below and then click Save Settings (3).</p></div>";
+        $ret = "<div class='error' name='run-new-error'><p>No backup location set. Enter something like ../wp-content/backup below and then click Save Settings (3).</p></div>";
         echo $ret;
         return;
     }
