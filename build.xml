@@ -5,7 +5,6 @@
 	<loadproperties srcFile="build.properties" />
 	<loadproperties srcFile="dev.properties" />
 	<loadproperties srcFile="single.properties" />
-	<loadproperties srcFile="win.properties" />
 	<loadproperties srcFile="deploy.properties" />
     <loadproperties srcFile="build.number" />
 	<!-- Sets variables which can later be used. -->
