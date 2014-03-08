@@ -21,9 +21,9 @@ $cfg = get_option('dbcbackup_options');
 if(!$cfg['active'] AND $mode == 'auto') return;
 
     if(empty($cfg['export_dir'])) {
-        $ret = "<div class='error'><p>No backup location set. Enter something like ../wp-content/backup below and then click Save Settings.</p></div>";
-
+        $ret = "<div class='error'><p>No backup location set. Enter something like ../wp-content/backup below and then click Save Settings (3).</p></div>";
         echo $ret;
+        return;
     }
 if($mode == 'auto')	dbcbackup_locale();
 
@@ -51,6 +51,7 @@ dbcbackup_data($row['Name'], $file);
 }
 dbcbackup_close($file);
 $result = __('Successful', 'dbcbackup');
+
 }
 else
 {
@@ -62,6 +63,7 @@ $time_total 	= 	$time_end - $time_start;
 $cfg['logs'][] 	= 	array ('file' => $fp, 'size' => @filesize($fp), 'started' => $timenow, 'took' => $time_total, 'status'	=> $result, 'removed' => $removed);
 update_option('dbcbackup_options', $cfg);
 return ($mode == 'auto' ? true : $cfg['logs']);
+
 }
 
 add_action('dbc_backup', 'dbcbackup_run');
