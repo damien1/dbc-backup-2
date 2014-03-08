@@ -52,7 +52,6 @@ if(!empty($cfg['logs'])):
             $ret .= '<td>' . $dbc_date . '</td>';
             $ret .= '<td>' . $dbc_status . '</td>';
             $ret .= '<td>' . $dbc_time . '</td>';
-
             $ret .= '<td>';
             if (!file_exists($dbc_server_path . $dbc_backup_file )){
             $ret .= $dbc_base_name;
