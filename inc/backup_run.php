@@ -51,7 +51,8 @@ dbcbackup_data($row['Name'], $file);
 }
 dbcbackup_close($file);
 $result = __('Successful', 'dbcbackup');
-
+    $ret = "<div class='updated' name='run-success'><p>Backup Done.</p></div>";
+    echo $ret;
 }
 else
 {
