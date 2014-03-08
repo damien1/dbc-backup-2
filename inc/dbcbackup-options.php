@@ -39,10 +39,7 @@ dbcbackup_admin_notices();
 			<div class="postbox">
 				<h3><span>Backup Settings Status</span></h3>
 				<div class="inside">
-					<?php echo implode('<br />', $dbc_msg);
-
-
-                    ?>
+					<?php echo dbc_check_condoms(); //echo implode('<br />', $dbc_msg);?>
 					</div>
 				</div>
 						<div class="postbox">
