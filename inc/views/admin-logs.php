@@ -16,9 +16,12 @@
  $dbc_backup_file = '';
  $dbc_server_path = ($_SERVER["DOCUMENT_ROOT"]);
  $dbc_downloader_path = '/inc/dbc_backup_downloader.php?download_file='; // path to downloader
+ global $dbc_plugin_path;
+ global $dbc_plugin_url;
 
+if(!empty($cfg['logs'])):
+    echo $dbc_server_path; ?>
 
-if(!empty($cfg['logs'])): ?>
     <table class="widefat">
         <thead>
         <tr>
@@ -26,8 +29,7 @@ if(!empty($cfg['logs'])): ?>
             <th scope="col"><?php _e('Date', 'dbcbackup'); ?></th>
             <th scope="col"><?php _e('Status', 'dbcbackup'); ?></th>
             <th scope="col"><?php _e('Finished In', 'dbcbackup'); ?></th>
-            <th scope="col"><?php _e('Download', 'dbcbackup'); ?></th>
-<!--            <th scope="col">--><?php //_e('Download', 'dbcbackup'); ?><!--</th>-->
+            <th scope="col"><?php _e('File', 'dbcbackup'); ?></th>
             <th scope="col"><?php _e('Filesize', 'dbcbackup'); ?></th>
             <th scope="col"><?php _e('Backups Removed', 'dbcbackup'); ?></th>
         </tr>
@@ -45,17 +47,20 @@ if(!empty($cfg['logs'])): ?>
             $dbc_time =  round($log['took'], 3) .' seconds';
             $dbc_size =  size_format($log['size'], 2);
             $dbc_delete = intval($log['removed']);
-            $ret = '<tr>';
+            $ret = '<tr name="' . $dbc_base_name .'">';
             $ret .= '<td>' . ++$i . '</td>';
             $ret .= '<td>' . $dbc_date . '</td>';
             $ret .= '<td>' . $dbc_status . '</td>';
             $ret .= '<td>' . $dbc_time . '</td>';
-           // $ret .= '<td>' . $dbc_base_name . '</td>';
+
             $ret .= '<td>';
-            if (file_exists($dbc_server_path . $dbc_backup_file )){
+            if (!file_exists($dbc_server_path . $dbc_backup_file )){
+            $ret .= $dbc_base_name;
+            }
+
+            elseif (file_exists($dbc_server_path . $dbc_backup_file )){
             $ret .= '<a target="_blank" href="';
-                // @todo remove hardcoded url
-            $ret .= 'http://dev.damien.home/wp-content/plugins/dbc-backup-2';
+            $ret .= $dbc_plugin_url;
             $ret .= $dbc_downloader_path;
             $ret .= $dbc_file_name;
             $ret .= '">dl</a>';
