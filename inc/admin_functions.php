@@ -228,6 +228,7 @@ function dbc_check_condoms(){
             if(!file_exists($dbc_export_dir.'/'.$condom))
             {
                 $dbc_msg .= sprintf(__("<br><strong>%s</strong> not found.", 'dbcbackup'), $condom);
+                $ret = sprintf("<div class='error' name='error-not-found'><p>You're not protected -- <strong>%s</strong> was deleted. Click save settings to create a new one (4).</p></div>", $condom);
             }
             else
             {
@@ -237,5 +238,8 @@ function dbc_check_condoms(){
     }
 
 
+
+    echo $ret;
     return $dbc_msg;
+
 }
