@@ -48,7 +48,9 @@ The plugin checks your PHP version and uses either the new mysqli connector or t
 This build @THISBUILD@
 
 = Version 2.5 =
-
+- Tested for WordPress 3.9
+- Regression check looks for at least PHP 5.3 before using mysqli connector
+- NEW introduces a download function for logged in Admin users. Download currently available only if you use the standard backup directory.
 
 = Version 2.4 =
 - WARNING - MYSQL connector deprecated since PHP 5.5.0 mysqli connector used instead
@@ -116,10 +118,7 @@ It makes sense to me to keep the SQL database backup where you will most likely 
 Not really, server based back-ups are only unsafe if your server is prone to fail or poorly protected from hacking.
 
 = I want to make my backup more secure =
-That's easy, the plugin creates a .htaccess file in the backup folder. You can open this file and add to this code. The backup folder is protected against browsing or direct file access. 
-
-= Will you add a link to download the file from the web? =
-No, as this would mean any anonymous user with the link could download your backup file. This would make things very insecure for you.
+That's easy, the plugin creates a .htaccess file in the backup folder. You can open this file and add to this code. The backup folder is protected against browsing or direct file access.
 
 = Why doesn't any compression format options appear? =
 Because Gzip and Bzip2 are not installed on your server.
