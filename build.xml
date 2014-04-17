@@ -145,6 +145,7 @@
             <filterset>
                 <filter token="PLUGINNAME" value="${plugin.name}"/>
                 <filter token="PlUGINSTABLE" value="${plugin.stable}"/>
+                <filter token="WORDPRESSTAGS" value="${wordpress.tags}"/>
                 <filter token="THISBUILD" value="${build.version} (${build.number})"/>
                 <filter token="STABLE" value="${wordpress.stable}"/>
                 <filter token="SHORTDESC" value="${plugin.short}"/>

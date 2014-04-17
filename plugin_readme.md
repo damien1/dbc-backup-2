@@ -1,7 +1,7 @@
 === @MARKETINGNAME@ ===
 Contributors: damiensaunders
 Donate link: 
-Tags: Database, Cron, Backup, Schedule, SQL, data, extract
+Tags: @WORDPRESSTAGS@
 Requires at least: 3.6
 Tested up to: @STABLE@
 Stable tag: @PlUGINSTABLE@
@@ -24,13 +24,13 @@ You select when and where your backup will be generated. The backup file is save
 = Additional Info =
 This plugin creates it's own sql file and does not use mysqldump like most other plugins.
 
-During backup, a log is created that includes, the generation date, file, filesize, status and the duration of the generation.
+During backup, a log is created that includes, the date, filename, filesize, status and the duration of the run.
 
-The backup sql export files can be imported with phpmyadmin or apps like Sequel Pro.
+The backup sql export files are tested can be imported with phpmyadmin or apps like Sequel Pro.
 
-DBC Backup was built to be fast, flexible and as simple as possible. That's why there are no built-in export options.
+DBC Backup 2 was built to be fast, flexible and as simple as possible. That's why there is no built-in export option.
 
-This plugin doesn't require your server to have mysqldump
+The plugin checks your PHP version and uses either the new mysqli connector or the old mysql connector. Since PHP 5.3, mysqli connector is enabled by default
 
 
 = Checkout my other work =
@@ -47,10 +47,13 @@ This plugin doesn't require your server to have mysqldump
 
 This build @THISBUILD@
 
+= Version 2.5 =
+
+
 = Version 2.4 =
 - WARNING - MYSQL connector deprecated since PHP 5.5.0 mysqli connector used instead
 - Regression fix for those people whose server uses MYSQL v5 but not enable mysqli
-- WARNING PHP 5.x and MYSQL 5.2.4 minimum for WordPress
+- WARNING PHP 5.2.4 is now the minimum for WordPress
 
 - So .. what's new ?? re-written this plugin to use mysqli connector
 - Updated - protection for your backup folder. If you've switched from any other backup plugin, you can use the same directory
