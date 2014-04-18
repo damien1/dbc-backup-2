@@ -105,16 +105,13 @@ elseif   ('dbc_backupnow' == $dbc_cnt )
 
         if(empty ($dbc_export_dir) && empty ($temp['export_dir'])  )
         {
-            $ret = "<div class='error' name='new-user-error'><p>New User? No backup location set. Enter something like ../wp-content/backup below and then click Save Settings (1).</p></div>";
-
-            echo $ret;
+            echo $dbc_msg_1;
         }
 
         elseif(!empty ($dbc_export_dir) && empty ($temp['export_dir'])  )
         {
-            $ret = "<div class='error' name='silly-user-error'><p>Hey -- Why would you try to do clear your backup folder (2).</p></div>";
 
-            echo $ret;
+            echo $dbc_msg_2;
         }
 
 
