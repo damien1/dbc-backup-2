@@ -28,7 +28,6 @@ dbcbackup_admin_notices();
 			<h2><?php _e('DBC Backup Options', 'dbcbackup'); ?></h2>
 			<div class="metabox-holder has-right-sidebar">
 				<?php
-
 				//$screen = get_current_screen();
                 //                    print_r($screen->id);
                 //                        return $screen;
