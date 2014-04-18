@@ -83,16 +83,16 @@
 
 
 	<target name="build.clean">
-		<echo message="delete the build and dist directories ..." level="info"/>
+		<echo message="delete the build directories ..." level="info" description="build clean"/>
 		<delete dir="${build.dir}" />
-		<delete dir="${dist.dir}" />
 	</target>
 
-    <target name="mac_old">
-        <copy todir="/Volumes/marcel/Users/damien/mamp/wordpress/wp-content/plugins/${plugin.name}" overwrite="true">
-            <fileset dir="${build.dir}/${plugin.name}"/>
-        </copy>
+    <target name="dist.clean">
+        <echo message="delete the build and dist directories ..." level="info" description="dist clean"/>
+        <delete dir="${dist.dir}" />
     </target>
+
+
 
 
 
