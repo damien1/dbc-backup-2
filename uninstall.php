@@ -9,10 +9,10 @@
  */
 
 // If uninstall not called from WordPress, then exit
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-    exit;
+if ( !defined( 'WP_UNINSTALL_PLUGIN' ) )
+    exit();
 
-    wp_clear_scheduled_hook('dbc_backup');
-    delete_option('dbcbackup_options');
-}
+    wp_clear_scheduled_hook( 'dbc_backup' );
+    delete_option( 'dbcbackup_options');
+
 ?>
