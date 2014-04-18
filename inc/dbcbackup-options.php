@@ -99,8 +99,7 @@ dbcbackup_admin_notices();
 	   <tr valign="top">
 		   <th scope="row" nowrap="nowrap"><?php _e('Export Directory:', 'dbcbackup'); ?></th>
 		   <td><input size="40" type="text"  name="export_dir" value="<?php echo esc_attr($cfg['export_dir']); ?>" /><br />
-			<?php _e('Use ../wp-content/backup or a full path like e.g. /home/username/public_html/databack', 'dbcbackup'); ?>
-
+			<?php echo $dbc_location_msg; ?>
            </td>
 
        </tr>
