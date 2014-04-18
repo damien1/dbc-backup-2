@@ -123,7 +123,11 @@ elseif   ('dbc_backupnow' == $dbc_cnt )
     // save the options to the database
 	update_option('dbcbackup_options', $temp);
 
-    // now we check and compare existing settings -- if the plugin has been installed and used ...
+            echo 'temp: ' . ($temp['export_dir']).'</br>';
+
+            $dbc_export_dir =   ($temp['export_dir']);
+
+            // now we check and compare existing settings -- if the plugin has been installed and used ...
 
 	if($cfg['active'] AND !$temp['active']) $clear = true;
 	if(!$cfg['active'] AND $temp['active']) $schedule = true;
