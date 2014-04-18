@@ -79,9 +79,10 @@ elseif   ('dbc_backupnow' == $dbc_cnt )
  elseif ('dbc_setup' == $dbc_cnt)
     {
 
-    //print_r($dbc_cnt);
-	//we check the admin referrer
-        // and setup the $temp values that we need
+    print_r($dbc_cnt);
+	// we check the admin referrer
+    // and setup the $temp values that we need
+    // @todo fix this
      $dbc_export_dir =   ($cfg['export_dir']);
 
 
