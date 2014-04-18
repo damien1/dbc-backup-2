@@ -19,11 +19,18 @@ $dbc_cnt='';   // takes the $_POST variables
 $clear='';
 $schedule='';
 $dbc_export_dir='';
+$dbc_server_path = ($_SERVER["DOCUMENT_ROOT"]);
+
+// admin view messages
+$dbc_location_msg = 'Use ../wp-content/backup or a full path like e.g.' . $dbc_server_path . '/public_html/backup ';
+$dbc_msg_1 = "<div class='error' name='new-user-error'><p>New User? No backup location set. Enter something like ../wp-content/backup below and then click Save Settings (1).</p></div>";
+$dbc_msg_2 = "<div class='error' name='silly-user-error'><p>Hey -- Why would you try to reset your backup folder (2).</p></div>";
 
 
 
-  // first we get the options from the dbc
+// first we get the options from the database
 $cfg = get_option('dbcbackup_options');
+
   // then we check what the _POST value is
   // store the _POST variables so we can use them
 
