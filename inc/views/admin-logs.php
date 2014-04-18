@@ -20,7 +20,7 @@
  global $dbc_plugin_url;
 
 if(!empty($cfg['logs'])):
-    echo $dbc_server_path; ?>
+   ?>
 
     <table class="widefat">
         <thead>
