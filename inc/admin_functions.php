@@ -45,14 +45,14 @@ if (isset($_POST['quickdo']))
     $dbc_cnt = ($_POST['quickdo']);
     // uncomment the next line to print_r the value
     // echo "_post [quickdo] ";
-    //print_r($dbc_cnt);
+
 }
 
 elseif (isset($_POST['do']))
 {
     $dbc_cnt = ($_POST['do']);
     // echo "_post [do] ";
-    //   print_r($dbc_cnt2);
+
 
 }
 
