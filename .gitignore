@@ -13,3 +13,5 @@ damien.xml
 cache.properties
 
 /vendor/
+
+/dist
