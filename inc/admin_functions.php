@@ -28,30 +28,21 @@ $dbc_msg_2 = "<div class='error' name='silly-user-error'><p>Hey -- Why would you
 $dbc_msg_4 = "<div class='updated'><p>Options saved.</p></div>";
 
 
-// first we get the options from the database
-$cfg = get_option('dbcbackup_options');
+    // first we get the options from the database
+    $cfg = get_option('dbcbackup_options');
 
- //dev tools
-if ( 'development' == APPLICATION_ENV )   {
-    print_r($dbc_cnt);
-    echo 'database stored: ' . ($cfg['export_dir']) .'</br>';
-}
-
-  // then we check what the _POST value is
-  // store the _POST variables so we can use them
+    // then we check what the _POST value is
+    // store the _POST variables so we can use them
 
 if (isset($_POST['quickdo']))
 {
     $dbc_cnt = ($_POST['quickdo']);
-    // uncomment the next line to print_r the value
-    // echo "_post [quickdo] ";
 
 }
 
 elseif (isset($_POST['do']))
 {
     $dbc_cnt = ($_POST['do']);
-    // echo "_post [do] ";
 
 
 }
@@ -61,9 +52,21 @@ else {
     //unset($dbc_cnt);
     }
 
+
+//dev tools
+if ( 'development' == APPLICATION_ENV )   {
+    //print_r($_POST);
+    print_r($dbc_cnt);
+    echo '</br>database stored: ' . ($cfg['export_dir']) .'</br>';
+}
+
+
+
+
+
+
 if ($dbc_cnt == 'dbc_logerase')
 {
-
   //if the $dbc_cnt / _POST value is logerase we check admin referer and then delete the logs from db.
 
 	check_admin_referer('dbc_quickdo');
@@ -72,9 +75,9 @@ if ($dbc_cnt == 'dbc_logerase')
 }
 
 elseif   ('dbc_backupnow' == $dbc_cnt )
-    //($_POST['quickdo'] == 'dbc_backupnow')
+    //if $dbc_cnt is quickdo then we do a backupnow
     {
-        //if $dbc_cnt is quickdo then we do a backupnow
+
         check_admin_referer('dbc_quickdo');
         $cfg['logs'] = dbcbackup_run('backupnow');
         return dbc_check_condoms();
@@ -84,12 +87,7 @@ elseif   ('dbc_backupnow' == $dbc_cnt )
 
  elseif ('dbc_setup' == $dbc_cnt)
     {
-
-    print_r($dbc_cnt);
-	// we check the admin referrer
-    // and setup the $temp values that we need
-    // @todo fix this
-     $dbc_export_dir =   ($cfg['export_dir']);
+    $dbc_export_dir =   ($cfg['export_dir']);  // if there is a stored value for the export directory we use it
 
 
 	check_admin_referer('dbc_options');
@@ -121,15 +119,15 @@ elseif   ('dbc_backupnow' == $dbc_cnt )
             echo $dbc_msg_2;
         }
 
-
-
-
-
         else {
     // save the options to the database
 	update_option('dbcbackup_options', $temp);
 
-            echo 'temp: ' . ($temp['export_dir']).'</br>';
+            if ( 'development' == APPLICATION_ENV )   {
+
+                echo '</br>database stored: ' . ($cfg['export_dir']) .'</br>';
+                echo 'temp: ' . ($temp['export_dir']).'</br>';
+            }
 
             $dbc_export_dir =   ($temp['export_dir']);
 
@@ -159,12 +157,18 @@ elseif   ('dbc_backupnow' == $dbc_cnt )
      {
          if(!is_dir($dbc_export_dir) AND !$is_safe_mode AND !file_exists($dbc_export_dir))
          {
+
+             if ( 'development' == APPLICATION_ENV )   {
+
+                 echo 'makedir'.'</br>';
+             }
+
              @mkdir($dbc_export_dir, 0777, true);
              @chmod($dbc_export_dir, 0777);
 
 
 
-             // @TODO change the error messages as half of them are now obsolete
+             // @TODO change the error messages as some of them are now obsolete
              if(is_dir($dbc_export_dir))
              {
                  $dbc_msg[] = sprintf(__("Backup Folder <strong>%s</strong> was created.", 'dbcbackup'), $dbc_export_dir);
@@ -211,7 +215,7 @@ elseif   ('dbc_backupnow' == $dbc_cnt )
 
          echo $ret;
      }
-        }
+   }
 }
 
 /**
