@@ -112,7 +112,7 @@ elseif   ('dbc_backupnow' == $dbc_cnt )
 
         if(empty ($dbc_export_dir) && empty ($temp['export_dir'])  )
         {
-            echo $dbc_msg_1;
+            echo $dbc_msg_1; // New User - No backup location set
         }
 
         elseif(!empty ($dbc_export_dir) && empty ($temp['export_dir'])  )
