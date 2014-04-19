@@ -145,11 +145,10 @@ elseif   ('dbc_backupnow' == $dbc_cnt )
 	if($clear) 		wp_clear_scheduled_hook('dbc_backup');
 	if($schedule) 	wp_schedule_event($temp['schedule'], 'dbc_backup', 'dbc_backup');
 	    // so finally if you are using the plugin for the first time ... $cfg = $temp
-        $cfg = $temp;
-        // if it saves ok ... we display the message that the options were saved
-        ?>
+        // @todo take this out as its probably rubbish
+        //$cfg = $temp;
 
-        <div class="updated"><p><?php _e('Options saved.') ?></p></div><?php
+    echo $dbc_msg_4; // if it saves ok ... we display the message that the options were saved
 
 //
 // here we go make directories
