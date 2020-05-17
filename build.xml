@@ -6,7 +6,7 @@
 	<loadproperties srcFile="dev.properties" />
 	<loadproperties srcFile="single.properties" />
 	<loadproperties srcFile="deploy.properties" />
-    <loadproperties srcFile="build.number" />
+   	<loadproperties srcFile="build.number" />
 	<!-- Sets variables which can later be used. -->
 	<!-- The value of a property is accessed via ${} -->
 	<property name="src.dir" location="src" />
@@ -202,15 +202,15 @@
 			{
 			"name" : "${plugin.name}",
 			"slug" : "${plugin.name}",
-			"homepage" : "http://wordpress.damien.co/${plugin.name}/",
-			"download_url" : "http://whitetshirtdigital.co.uk/plugins/${plugin.name}/${plugin.name}.zip",
+			"homepage" : "http://yourdomain.co/${plugin.name}/",
+			"download_url" : "http://yourdomain.co/plugins/${plugin.name}/${plugin.name}.zip",
 			"version" : "${plugin.build}",
 			"requires" : "3.3",
 			"tested" : "3.5.1",
 			"last_updated" : "2013-02-24 16:00:00",
 			"upgrade_notice" : "${plugin.changelog.version}",
-			"author" : "Damien Saunders",
-			"author_homepage" : "http://damien.co/",
+			"author" : "your name",
+			"author_homepage" : "http://yourdomain.co/",
 			"sections" : {
 			"description" : "${plugin.short}",
 			"installation_notes" : "Click install to download and automatically update to the new version..",
@@ -231,7 +231,7 @@
 				 basedir="/${build.dir}"
 				/>
 		<echo message="storing a copy in DropBox ..." level="info"/>
-		<zip destfile="/Volumes/marcel/Users/damien/Dropbox/_plugins/${plugin.name}-${build.version}-${build.number}.zip"
+		<zip destfile="/pathto/Dropbox/_plugins/${plugin.name}-${build.version}-${build.number}.zip"
 				 basedir="/${build.dir}"
 				/>
 	</target>
